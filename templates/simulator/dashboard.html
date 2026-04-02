@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% block title %}PatternIQ Dashboard | Precision Engineering{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto space-y-12">
+  <!-- Header & Action -->
+  <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+    <div>
+      <h1 class="font-headline text-4xl font-extrabold tracking-tighter text-on-surface">Yield Intelligence</h1>
+      <p class="text-secondary mt-2 font-body max-w-md">Real-time simulation metrics and wafer defect topography from the Precision Engineering Division.</p>
+    </div>
+    <a href="{% url 'simulator:simulate' %}"
+       class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-6 py-3 rounded-lg font-headline font-bold text-sm shadow-lg hover:shadow-primary/20 transition-all flex items-center gap-2 w-fit">
+      <span class="material-symbols-outlined">rocket_launch</span>
+      Execute Simulation
+    </a>
+  </div>
+
+  <!-- Bento Grid: Stats -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Last Yield -->
+    <div class="bg-surface-container-lowest p-8 rounded-xl shadow-[0_4px_20px_rgba(30,41,59,0.04)] relative overflow-hidden group">
+      <div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+      <p class="font-label text-xs uppercase tracking-widest text-outline mb-2">Last Yield</p>
+      <div class="flex items-baseline gap-2">
+        <span class="font-headline text-5xl font-extrabold text-on-surface">
+          {% if last_run and last_run.mean_yield %}{{ last_run.mean_yield|floatformat:1 }}{% else %}--{% endif %}
+        </span>
+        <span class="font-label text-xl text-primary font-bold">%</span>
+      </div>
+      <div class="mt-4 flex items-center gap-1 text-primary">
+        <span class="material-symbols-outlined text-sm">trending_up</span>
+        <span class="text-xs font-semibold">
+          {% if last_run %}Run #{{ last_run.pk }}{% else %}No runs yet{% endif %}
+        </span>
+      </div>
+    </div>
+
+    <!-- Runs This Session -->
+    <div class="bg-surface-container-lowest p-8 rounded-xl shadow-[0_4px_20px_rgba(30,41,59,0.04)] relative overflow-hidden group">
+      <p class="font-label text-xs uppercase tracking-widest text-outline mb-2">Total Runs</p>
+      <div class="flex items-baseline gap-2">
+        <span class="font-headline text-5xl font-extrabold text-on-surface">{{ total_runs }}</span>
+        <span class="font-label text-xl text-outline font-medium">/ completed: {{ completed_runs }}</span>
+      </div>
+      <div class="mt-6 w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+        {% if total_runs > 0 %}
+        <div class="h-full bg-primary rounded-full" style="width: {% widthratio completed_runs total_runs 100 %}%"></div>
+        {% else %}
+        <div class="h-full bg-primary rounded-full" style="width: 0%"></div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Best Wafer -->
+    <div class="bg-surface-container-lowest p-8 rounded-xl shadow-[0_4px_20px_rgba(30,41,59,0.04)] relative overflow-hidden group">
+      <p class="font-label text-xs uppercase tracking-widest text-outline mb-2">Best Yield</p>
+      <div class="flex items-baseline gap-2">
+        <span class="font-headline text-5xl font-extrabold text-on-surface">
+          {% if best_yield %}{{ best_yield|floatformat:1 }}{% else %}--{% endif %}
+        </span>
+        <span class="font-label text-xl text-primary font-bold">%</span>
+      </div>
+      <div class="mt-4 flex items-center gap-1 text-outline">
+        <span class="material-symbols-outlined text-sm">emoji_events</span>
+        <span class="text-xs font-semibold">Across all runs</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Runs -->
+  <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+    <div class="p-6 border-b border-outline-variant/10 flex justify-between items-center">
+      <h2 class="font-headline text-xl font-bold text-slate-900 flex items-center gap-2">
+        <span class="w-2 h-6 bg-primary rounded-full"></span>
+        Recent Runs
+      </h2>
+      <a href="{% url 'simulator:history' %}" class="text-xs font-label font-bold uppercase tracking-widest text-primary hover:underline">View All</a>
+    </div>
+    {% if recent_runs %}
+    <div class="overflow-x-auto">
+      <table class="w-full text-left">
+        <thead class="bg-surface-container-low font-label text-[10px] uppercase tracking-[0.2em] text-slate-400 font-bold">
+          <tr>
+            <th class="px-6 py-4">Run ID</th>
+            <th class="px-6 py-4">Date</th>
+            <th class="px-6 py-4">Mean Yield</th>
+            <th class="px-6 py-4">Std Dev</th>
+            <th class="px-6 py-4">Status</th>
+            <th class="px-6 py-4">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for run in recent_runs %}
+          <tr class="hover:bg-slate-50 transition-colors group cursor-pointer">
+            <td class="px-6 py-5">
+              <span class="font-label font-bold text-sm text-primary">#PX-{{ run.pk }}</span>
+            </td>
+            <td class="px-6 py-5">
+              <div class="flex flex-col">
+                <span class="text-sm font-medium">{{ run.created_at|date:"M d, Y" }}</span>
+                <span class="text-[10px] text-outline">{{ run.created_at|time:"H:i" }} UTC</span>
+              </div>
+            </td>
+            <td class="px-6 py-5">
+              <span class="font-headline font-bold text-lg {% if run.mean_yield and run.mean_yield < 80 %}text-error{% endif %}">
+                {% if run.mean_yield %}{{ run.mean_yield|floatformat:2 }}%{% else %}--{% endif %}
+              </span>
+            </td>
+            <td class="px-6 py-5">
+              <span class="font-label text-sm text-secondary">
+                {% if run.std_yield %}{{ run.std_yield|floatformat:3 }}{% else %}--{% endif %}
+              </span>
+            </td>
+            <td class="px-6 py-5">
+              {% if run.status == 'completed' %}
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(0,105,72,0.4)]"></span>
+                <span class="text-xs font-semibold uppercase tracking-wider text-primary">Completed</span>
+              </div>
+              {% elif run.status == 'running' %}
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
+                <span class="text-xs font-semibold uppercase tracking-wider text-secondary">Running</span>
+              </div>
+              {% else %}
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-error"></span>
+                <span class="text-xs font-semibold uppercase tracking-wider text-error">Failed</span>
+              </div>
+              {% endif %}
+            </td>
+            <td class="px-6 py-5">
+              {% if run.status == 'completed' %}
+              <a href="{% url 'simulator:results' run.pk %}"
+                 class="p-2 opacity-0 group-hover:opacity-100 transition-opacity text-outline hover:text-primary inline-flex">
+                <span class="material-symbols-outlined text-xl">monitoring</span>
+              </a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="py-16 flex flex-col items-center text-center gap-4">
+      <span class="material-symbols-outlined text-5xl text-outline/40">science</span>
+      <p class="text-secondary font-body">No simulations yet.</p>
+      <a href="{% url 'simulator:simulate' %}"
+         class="mt-2 px-6 py-2.5 rounded-lg font-semibold text-on-primary bg-gradient-to-br from-primary to-primary-container shadow hover:opacity-90 transition text-sm">
+        Run Your First Simulation
+      </a>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Wafer map from last completed run -->
+  {% if last_run and last_run.status == 'completed' and last_run.wafer_map_image %}
+  <div class="bg-surface-container-lowest rounded-xl shadow-sm p-8">
+    <h2 class="font-headline text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+      <span class="w-2 h-6 bg-primary rounded-full"></span>
+      Latest Wafer Map — Run #{{ last_run.pk }}
+    </h2>
+    <img src="{{ last_run.wafer_map_image.url }}" alt="Wafer Map" class="w-full rounded-xl"/>
+    <div class="mt-4 flex gap-3">
+      <a href="{% url 'simulator:results' last_run.pk %}"
+         class="text-xs font-label font-bold uppercase tracking-widest text-primary hover:underline">View Full Results →</a>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

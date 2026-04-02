@@ -1,6 +1,16 @@
-numpy==1.26.4
-scipy==1.13.0
-matplotlib==3.9.0
-pandas==2.2.2
-notebook==7.2.0
-ipykernel==6.29.4
+# Core simulation dependencies
+numpy>=1.26
+scipy>=1.13
+matplotlib>=3.9
+pandas>=2.2
+
+# Django web framework
+django>=6.0
+psycopg2-binary>=2.9    # Postgres adapter for Supabase connection
+
+# Image handling (required by Django ImageField)
+pillow>=10.0
+
+# PDF export
+reportlab>=4.0
+

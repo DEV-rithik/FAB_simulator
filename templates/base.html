@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>{% block title %}PatternIQ{% endblock %}</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "on-background": "#191c1e",
+          "primary-container": "#00855d",
+          "surface": "#f7f9fb",
+          "secondary-fixed-dim": "#bcc7de",
+          "on-primary-fixed": "#002114",
+          "tertiary-container": "#ba5551",
+          "secondary-container": "#d5e0f8",
+          "outline": "#6d7a72",
+          "inverse-on-surface": "#eff1f3",
+          "surface-container-low": "#f2f4f6",
+          "on-tertiary": "#ffffff",
+          "error": "#ba1a1a",
+          "on-secondary-container": "#586377",
+          "error-container": "#ffdad6",
+          "primary": "#006948",
+          "tertiary-fixed-dim": "#ffb3ae",
+          "surface-dim": "#d8dadc",
+          "on-primary-fixed-variant": "#005137",
+          "secondary-fixed": "#d8e3fb",
+          "surface-container": "#eceef0",
+          "on-tertiary-fixed": "#410004",
+          "on-primary-container": "#f5fff7",
+          "on-tertiary-container": "#fffbff",
+          "inverse-primary": "#68dba9",
+          "on-surface-variant": "#3d4a42",
+          "surface-container-lowest": "#ffffff",
+          "primary-fixed": "#85f8c4",
+          "on-surface": "#191c1e",
+          "on-tertiary-fixed-variant": "#7f2928",
+          "inverse-surface": "#2d3133",
+          "surface-tint": "#006c4a",
+          "surface-container-high": "#e6e8ea",
+          "on-secondary-fixed-variant": "#3c475a",
+          "on-error": "#ffffff",
+          "outline-variant": "#bccac0",
+          "on-secondary": "#ffffff",
+          "surface-bright": "#f7f9fb",
+          "background": "#f7f9fb",
+          "tertiary-fixed": "#ffdad7",
+          "primary-fixed-dim": "#68dba9",
+          "surface-variant": "#e0e3e5",
+          "on-error-container": "#93000a",
+          "secondary": "#545f73",
+          "on-secondary-fixed": "#111c2d",
+          "surface-container-highest": "#e0e3e5",
+          "tertiary": "#9b3e3b",
+          "on-primary": "#ffffff"
+        },
+        fontFamily: {
+          "headline": ["Manrope"],
+          "body": ["Inter"],
+          "label": ["Space Grotesk"]
+        },
+        borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+      },
+    },
+  }
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    vertical-align: middle;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 16px; height: 16px;
+    background: #006948; border-radius: 50%; cursor: pointer;
+  }
+</style>
+{% block extra_head %}{% endblock %}
+</head>
+<body class="bg-surface font-body text-on-background selection:bg-primary-fixed selection:text-on-primary-fixed">
+
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-md shadow-sm">
+  <div class="flex justify-between items-center px-8 h-16 max-w-screen-2xl mx-auto">
+    <div class="flex items-center gap-8">
+      <a href="{% url 'simulator:dashboard' %}" class="text-xl font-bold tracking-tighter text-slate-900 font-headline">PatternIQ</a>
+      <nav class="hidden md:flex gap-6">
+        <a href="{% url 'simulator:dashboard' %}"
+           class="{% if request.resolver_match.url_name == 'dashboard' %}text-emerald-700 font-semibold border-b-2 border-emerald-600{% else %}text-slate-600 hover:text-emerald-600{% endif %} transition-colors duration-200 font-headline tracking-tight">
+          Platform
+        </a>
+        <a href="{% url 'simulator:simulate' %}"
+           class="{% if request.resolver_match.url_name == 'simulate' %}text-emerald-700 font-semibold border-b-2 border-emerald-600{% else %}text-slate-600 hover:text-emerald-600{% endif %} transition-colors duration-200 font-headline tracking-tight">
+          Simulations
+        </a>
+        <a href="{% url 'simulator:history' %}"
+           class="{% if request.resolver_match.url_name == 'history' %}text-emerald-700 font-semibold border-b-2 border-emerald-600{% else %}text-slate-600 hover:text-emerald-600{% endif %} transition-colors duration-200 font-headline tracking-tight">
+          History
+        </a>
+      </nav>
+    </div>
+    <div class="flex items-center gap-4">
+      {% if user.is_authenticated %}
+      <span class="hidden md:block text-sm text-slate-600 font-body">{{ user.username }}</span>
+      <a href="{% url 'auth:logout' %}" class="p-2 text-slate-600 hover:bg-slate-200 rounded-lg transition-colors">
+        <span class="material-symbols-outlined">logout</span>
+      </a>
+      {% else %}
+      <a href="{% url 'auth:login' %}" class="text-sm font-semibold text-primary hover:underline">Login</a>
+      {% endif %}
+    </div>
+  </div>
+  <div class="bg-slate-200 h-[1px] w-full block"></div>
+</header>
+
+<div class="flex min-h-screen pt-16">
+  <!-- Sidebar Navigation -->
+  <aside class="w-64 bg-surface-container-low hidden md:flex flex-col p-6 gap-8 fixed h-[calc(100vh-64px)] overflow-y-auto">
+    <div class="space-y-1">
+      <p class="font-label text-[10px] uppercase tracking-[0.2em] text-outline px-3 mb-4">Core Systems</p>
+      <a href="{% url 'simulator:dashboard' %}"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-lg {% if request.resolver_match.url_name == 'dashboard' %}bg-surface-container-lowest text-primary font-semibold shadow-sm{% else %}text-secondary hover:bg-surface-container-high{% endif %} transition-all">
+        <span class="material-symbols-outlined" {% if request.resolver_match.url_name == 'dashboard' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>home</span>
+        <span class="font-headline text-sm tracking-tight">Home</span>
+      </a>
+      <a href="{% url 'simulator:simulate' %}"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-lg {% if request.resolver_match.url_name == 'simulate' %}bg-surface-container-lowest text-primary font-semibold shadow-sm{% else %}text-secondary hover:bg-surface-container-high{% endif %} transition-all">
+        <span class="material-symbols-outlined">add_circle</span>
+        <span class="font-headline text-sm tracking-tight">New Sim</span>
+      </a>
+      <a href="{% url 'simulator:history' %}"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-lg {% if request.resolver_match.url_name == 'history' %}bg-surface-container-lowest text-primary font-semibold shadow-sm{% else %}text-secondary hover:bg-surface-container-high{% endif %} transition-all">
+        <span class="material-symbols-outlined">history</span>
+        <span class="font-headline text-sm tracking-tight">History</span>
+      </a>
+    </div>
+    <div class="space-y-1">
+      <p class="font-label text-[10px] uppercase tracking-[0.2em] text-outline px-3 mb-4">Administration</p>
+      <a href="{% url 'auth:logout' %}"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-high transition-all">
+        <span class="material-symbols-outlined">logout</span>
+        <span class="font-headline text-sm tracking-tight">Sign Out</span>
+      </a>
+    </div>
+    <div class="mt-auto">
+      <div class="p-4 rounded-xl bg-primary/5 border border-primary/10">
+        <p class="font-label text-[10px] text-primary font-bold uppercase tracking-widest mb-1">System Health</p>
+        <div class="flex items-center gap-2">
+          <div class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(0,105,72,0.6)]"></div>
+          <span class="text-xs font-medium text-primary">All Nodes Operational</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 md:ml-64 p-8 lg:p-12">
+    {% if messages %}
+    <div class="mb-6 space-y-2">
+      {% for message in messages %}
+      <div class="px-4 py-3 rounded-lg text-sm font-medium
+        {% if message.tags == 'error' %}bg-error-container text-on-error-container
+        {% else %}bg-primary/10 text-primary{% endif %}">
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</div>
+
+<!-- Footer -->
+<footer class="w-full bg-slate-100 mt-auto border-t border-slate-200">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 px-12 py-16 w-full max-w-screen-2xl mx-auto">
+    <div class="space-y-4">
+      <span class="font-headline font-extrabold text-slate-800 text-xl">PatternIQ</span>
+      <p class="font-label text-xs uppercase tracking-widest text-emerald-800 max-w-xs">
+        © 2024 PatternIQ Yield Systems. Precision Engineering Division.
+      </p>
+    </div>
+    <div class="flex flex-wrap gap-x-12 gap-y-4 md:justify-end items-start">
+      <div class="flex flex-col gap-3">
+        <span class="font-label text-[10px] font-bold text-slate-400 uppercase tracking-widest">System</span>
+        <a class="font-label text-xs uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all" href="#">Status</a>
+        <a class="font-label text-xs uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all" href="#">API Reference</a>
+      </div>
+      <div class="flex flex-col gap-3">
+        <span class="font-label text-[10px] font-bold text-slate-400 uppercase tracking-widest">Legal</span>
+        <a class="font-label text-xs uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all" href="#">Privacy Policy</a>
+        <a class="font-label text-xs uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all" href="#">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
