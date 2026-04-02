@@ -41,8 +41,16 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
-            next_url = request.GET.get('next', 'simulator:dashboard')
-            return redirect(next_url)
+            next_url = request.GET.get('next', '')
+            # Validate redirect URL to prevent open redirect attacks
+            from django.utils.http import url_has_allowed_host_and_scheme
+            if next_url and url_has_allowed_host_and_scheme(
+                url=next_url,
+                allowed_hosts=request.get_host(),
+                require_https=request.is_secure(),
+            ):
+                return redirect(next_url)
+            return redirect('simulator:dashboard')
         messages.error(request, 'Invalid username or password.')
     return render(request, 'auth/login.html')
 
