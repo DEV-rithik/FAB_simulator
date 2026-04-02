@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Simulation Config | PatternIQ</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Space_Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-background": "#191c1e",
+              "primary-container": "#00855d",
+              "surface": "#f7f9fb",
+              "secondary-fixed-dim": "#bcc7de",
+              "on-primary-fixed": "#002114",
+              "tertiary-container": "#ba5551",
+              "secondary-container": "#d5e0f8",
+              "outline": "#6d7a72",
+              "inverse-on-surface": "#eff1f3",
+              "surface-container-low": "#f2f4f6",
+              "on-tertiary": "#ffffff",
+              "error": "#ba1a1a",
+              "on-secondary-container": "#586377",
+              "error-container": "#ffdad6",
+              "primary": "#006948",
+              "tertiary-fixed-dim": "#ffb3ae",
+              "surface-dim": "#d8dadc",
+              "on-primary-fixed-variant": "#005137",
+              "secondary-fixed": "#d8e3fb",
+              "surface-container": "#eceef0",
+              "on-tertiary-fixed": "#410004",
+              "on-primary-container": "#f5fff7",
+              "on-tertiary-container": "#fffbff",
+              "inverse-primary": "#68dba9",
+              "on-surface-variant": "#3d4a42",
+              "surface-container-lowest": "#ffffff",
+              "primary-fixed": "#85f8c4",
+              "on-surface": "#191c1e",
+              "on-tertiary-fixed-variant": "#7f2928",
+              "inverse-surface": "#2d3133",
+              "surface-tint": "#006c4a",
+              "surface-container-high": "#e6e8ea",
+              "on-secondary-fixed-variant": "#3c475a",
+              "on-error": "#ffffff",
+              "outline-variant": "#bccac0",
+              "on-secondary": "#ffffff",
+              "surface-bright": "#f7f9fb",
+              "background": "#f7f9fb",
+              "tertiary-fixed": "#ffdad7",
+              "primary-fixed-dim": "#68dba9",
+              "surface-variant": "#e0e3e5",
+              "on-error-container": "#93000a",
+              "secondary": "#545f73",
+              "on-secondary-fixed": "#111c2d",
+              "surface-container-highest": "#e0e3e5",
+              "tertiary": "#9b3e3b",
+              "on-primary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-effect {
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        background: #006948;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-md shadow-sm">
+<div class="flex justify-between items-center px-8 h-16 max-w-screen-2xl mx-auto font-['Manrope'] tracking-tight">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-slate-900">PatternIQ</span>
+<div class="hidden md:flex gap-6">
+<a class="text-slate-600 hover:text-emerald-600 transition-colors duration-200" href="#">Platform</a>
+<a class="text-emerald-700 font-semibold border-b-2 border-emerald-600 transition-colors duration-200" href="#">Simulations</a>
+<a class="text-slate-600 hover:text-emerald-600 transition-colors duration-200" href="#">Research</a>
+<a class="text-slate-600 hover:text-emerald-600 transition-colors duration-200" href="#">Documentation</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center bg-surface-container rounded-lg px-3 py-1.5 gap-2 border border-outline-variant/10">
+<span class="material-symbols-outlined text-slate-500 text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 font-body" placeholder="Search parameters..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-600 hover:bg-slate-200 rounded-lg transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<button class="p-2 text-slate-600 hover:bg-slate-200 rounded-lg transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</div>
+</div>
+<div class="bg-slate-200 h-[1px] w-full block"></div>
+</nav>
+<main class="pt-24 pb-20 px-8 max-w-screen-2xl mx-auto min-h-screen flex flex-col gap-12">
+<!-- Header Section -->
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="space-y-2">
+<div class="flex items-center gap-3">
+<span class="font-label text-xs uppercase tracking-widest text-primary font-bold">Yield Optimizer v2.4</span>
+<span class="h-[1px] w-12 bg-outline-variant/30"></span>
+<span class="font-label text-xs uppercase tracking-widest text-slate-400">Simulation ID: PX-99012</span>
+</div>
+<h1 class="font-headline text-4xl font-extrabold tracking-tight text-slate-900">Simulation Configuration</h1>
+<p class="text-slate-500 max-w-2xl font-body">Define process nodes, physical constraints, and stochastic parameters for high-precision Monte Carlo yield analysis.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-2.5 rounded-lg font-semibold text-slate-700 bg-surface-container-high hover:bg-surface-dim transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">save</span>
+                    Save Draft
+                </button>
+<button class="px-6 py-2.5 rounded-lg font-semibold text-on-primary bg-gradient-to-br from-primary to-primary-container shadow-lg shadow-primary/20 hover:opacity-90 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">play_arrow</span>
+                    Initialize Run
+                </button>
+</div>
+</header>
+<!-- Configuration Grid -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Left Column: Process Config (Asymmetric layout) -->
+<div class="col-span-12 lg:col-span-5 flex flex-col gap-8">
+<!-- Process Architecture Card -->
+<section class="bg-surface-container-lowest p-8 rounded-xl relative overflow-hidden shadow-sm">
+<div class="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+<span class="material-symbols-outlined text-8xl">precision_manufacturing</span>
+</div>
+<h2 class="font-headline text-xl font-bold mb-8 text-slate-900 flex items-center gap-2">
+<span class="w-2 h-6 bg-primary rounded-full"></span>
+                        Process Configuration
+                    </h2>
+<div class="space-y-8">
+<!-- Node Selection -->
+<div class="grid grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="font-label text-xs uppercase tracking-widest text-slate-500 font-bold">Process Node</label>
+<div class="bg-surface-container-low p-4 rounded border-b-2 border-primary">
+<span class="font-headline font-bold text-slate-800">SKY130 130nm</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label text-xs uppercase tracking-widest text-slate-500 font-bold">Wafer Diameter</label>
+<div class="bg-surface-container-low p-4 rounded border-b-2 border-slate-300">
+<span class="font-headline font-bold text-slate-800">300mm</span>
+</div>
+</div>
+</div>
+<!-- Die Size -->
+<div class="space-y-3">
+<label class="font-label text-xs uppercase tracking-widest text-slate-500 font-bold">Active Die Dimensions</label>
+<div class="flex items-center gap-4">
+<div class="flex-1 bg-surface-container-low p-4 rounded flex items-center justify-between">
+<span class="font-label text-xs text-slate-400">Width</span>
+<span class="font-headline font-bold text-slate-800">5.00 mm</span>
+</div>
+<span class="material-symbols-outlined text-slate-300">close</span>
+<div class="flex-1 bg-surface-container-low p-4 rounded flex items-center justify-between">
+<span class="font-label text-xs text-slate-400">Height</span>
+<span class="font-headline font-bold text-slate-800">5.00 mm</span>
+</div>
+</div>
+</div>
+<!-- Monte Carlo Slider -->
+<div class="space-y-4 pt-4">
+<div class="flex justify-between items-center">
+<label class="font-label text-xs uppercase tracking-widest text-slate-500 font-bold">Monte Carlo Runs</label>
+<span class="bg-primary/10 text-primary px-3 py-1 rounded font-label font-bold text-sm">10,000 Iterations</span>
+</div>
+<input class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-primary" max="50000" min="1000" step="1000" type="range" value="10000"/>
+<div class="flex justify-between text-[10px] font-label text-slate-400 uppercase tracking-tighter">
+<span>Low Fi (1k)</span>
+<span>Standard (10k)</span>
+<span>Production (50k)</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Die Map Visualizer -->
+<div class="bg-slate-900 rounded-xl p-8 text-white relative overflow-hidden h-64 flex flex-col justify-between">
+<img class="absolute inset-0 object-cover opacity-20" data-alt="close up of silicon wafer pattern with gold circuit paths under professional laboratory blue light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVWegssT8VmQ6gpMUCApkE806us2tePatlZfx9heLvKFW1W0uoqTMbf1ZlsqjTR3Pxy7R_dotk8LgJ8MDzMV6XoTYHuBHyfi90yUho82p624JNngm5ad0rrirbSRXANyiodoMWwyLBr0gHTMUZyplhNNFtNKqK1RasYSaI_DO9WtT2qczZWgBkFf_2PPTIEt3D8JfqO6YyvHwpLHXE6aeRSZjYUrtTedc4zORGmNYC-P5FCh9dAybkOkwKm4IDzCTzJDovcFZA9S1T"/>
+<div class="relative z-10">
+<h3 class="font-label text-xs uppercase tracking-[0.2em] text-emerald-400 font-bold mb-1">Spatial Density Map</h3>
+<p class="text-sm text-slate-300">Projected Die Distribution</p>
+</div>
+<div class="relative z-10 flex justify-between items-end">
+<div class="space-y-1">
+<p class="text-2xl font-headline font-bold">2,148 <span class="text-xs font-label font-normal text-slate-400 uppercase">Gross Dice</span></p>
+</div>
+<div class="flex gap-1 h-12 items-end">
+<div class="w-1 bg-emerald-500/30 h-1/2"></div>
+<div class="w-1 bg-emerald-500/50 h-2/3"></div>
+<div class="w-1 bg-emerald-500 h-full"></div>
+<div class="w-1 bg-emerald-500/80 h-3/4"></div>
+<div class="w-1 bg-emerald-500/40 h-1/2"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Parameter Specs Table -->
+<div class="col-span-12 lg:col-span-7">
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col h-full">
+<div class="p-8 border-b border-outline-variant/10 flex justify-between items-center">
+<h2 class="font-headline text-xl font-bold text-slate-900 flex items-center gap-2">
+<span class="w-2 h-6 bg-primary rounded-full"></span>
+                            Parameter Specifications
+                        </h2>
+<div class="flex gap-2">
+<button class="text-xs font-label font-bold uppercase tracking-widest text-primary p-2 hover:bg-primary/5 rounded transition-colors">Export CSV</button>
+<button class="text-xs font-label font-bold uppercase tracking-widest text-slate-500 p-2 hover:bg-slate-100 rounded transition-colors">Bulk Edit</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low font-label text-[10px] uppercase tracking-[0.2em] text-slate-400 font-bold">
+<tr>
+<th class="px-8 py-4">Parameter ID</th>
+<th class="px-6 py-4">Nominal Value</th>
+<th class="px-6 py-4">Tolerance</th>
+<th class="px-6 py-4 text-right">Sigma Sparkline</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-8 py-6">
+<div class="flex flex-col">
+<span class="font-headline font-bold text-slate-800">Vth0</span>
+<span class="font-label text-[10px] text-slate-400 uppercase">Threshold Voltage</span>
+</div>
+</td>
+<td class="px-6 py-6 font-body text-sm font-semibold text-slate-600">0.420 V</td>
+<td class="px-6 py-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary">arrow_upward</span>
+<span class="font-body text-sm text-slate-600">± 5%</span>
+</div>
+</td>
+<td class="px-8 py-6 text-right">
+<div class="inline-flex items-end gap-0.5 h-6">
+<div class="w-1 bg-primary/20 h-2"></div>
+<div class="w-1 bg-primary/40 h-4"></div>
+<div class="w-1 bg-primary/60 h-6"></div>
+<div class="w-1 bg-primary/40 h-5"></div>
+<div class="w-1 bg-primary/20 h-3"></div>
+<div class="w-1 bg-primary/10 h-1"></div>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-8 py-6">
+<div class="flex flex-col">
+<span class="font-headline font-bold text-slate-800">Tox</span>
+<span class="font-label text-[10px] text-slate-400 uppercase">Oxide Thickness</span>
+</div>
+</td>
+<td class="px-6 py-6 font-body text-sm font-semibold text-slate-600">2.1 nm</td>
+<td class="px-6 py-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-error">trending_down</span>
+<span class="font-body text-sm text-slate-600">± 1.2%</span>
+</div>
+</td>
+<td class="px-8 py-6 text-right">
+<div class="inline-flex items-end gap-0.5 h-6">
+<div class="w-1 bg-primary h-2"></div>
+<div class="w-1 bg-primary h-3"></div>
+<div class="w-1 bg-primary h-5"></div>
+<div class="w-1 bg-primary h-6"></div>
+<div class="w-1 bg-primary h-4"></div>
+<div class="w-1 bg-primary h-2"></div>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-8 py-6">
+<div class="flex flex-col">
+<span class="font-headline font-bold text-slate-800">mu0</span>
+<span class="font-label text-[10px] text-slate-400 uppercase">Mobility Factor</span>
+</div>
+</td>
+<td class="px-6 py-6 font-body text-sm font-semibold text-slate-600">450 cm²/Vs</td>
+<td class="px-6 py-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-300">remove</span>
+<span class="font-body text-sm text-slate-600">± 8%</span>
+</div>
+</td>
+<td class="px-8 py-6 text-right">
+<div class="inline-flex items-end gap-0.5 h-6">
+<div class="w-1 bg-primary/30 h-4"></div>
+<div class="w-1 bg-primary/30 h-5"></div>
+<div class="w-1 bg-primary/30 h-4"></div>
+<div class="w-1 bg-primary/30 h-5"></div>
+<div class="w-1 bg-primary/30 h-6"></div>
+<div class="w-1 bg-primary/30 h-5"></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mt-auto p-8 bg-surface-container-high/30">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-primary p-2 bg-primary/10 rounded">info</span>
+<div>
+<p class="text-xs font-headline font-bold text-slate-800 mb-1">Statistical Correlation Detected</p>
+<p class="text-xs text-slate-500 leading-relaxed font-body">Parameters Tox and Vth0 show a high degree of linear correlation (r=0.82) based on historical SKY130 data. Monte Carlo runs will be adjusted for covariant sampling.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- System Status Banner -->
+<div class="bg-emerald-50 border border-emerald-100 rounded-xl p-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+</span>
+<span class="font-label text-xs font-bold text-emerald-800 uppercase tracking-widest">Compute Engine: Available</span>
+<span class="text-emerald-600/40 px-2">|</span>
+<span class="text-xs text-emerald-700 font-body">Estimated compute time: 14m 20s for 10k iterations.</span>
+</div>
+<div class="text-[10px] font-label text-emerald-800/50 uppercase">Region: US-East-1</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-slate-100 dark:bg-slate-950 mt-auto border-t border-slate-200">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 px-12 py-16 w-full max-w-screen-2xl mx-auto">
+<div class="space-y-4">
+<span class="font-['Manrope'] font-extrabold text-slate-800 text-xl">PatternIQ</span>
+<p class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-emerald-800 max-w-xs">
+                    © 2024 PatternIQ Yield Systems. Precision Engineering Division.
+                </p>
+</div>
+<div class="flex flex-wrap gap-x-12 gap-y-4 md:justify-end items-start">
+<div class="flex flex-col gap-3">
+<span class="font-['Space_Grotesk'] text-[10px] font-bold text-slate-400 uppercase tracking-widest">System</span>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all" href="#">Status</a>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all" href="#">API Reference</a>
+</div>
+<div class="flex flex-col gap-3">
+<span class="font-['Space_Grotesk'] text-[10px] font-bold text-slate-400 uppercase tracking-widest">Legal</span>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all" href="#">Privacy Policy</a>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all" href="#">Terms of Service</a>
+</div>
+<div class="flex flex-col gap-3">
+<span class="font-['Space_Grotesk'] text-[10px] font-bold text-slate-400 uppercase tracking-widest">Support</span>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all" href="#">Help Center</a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

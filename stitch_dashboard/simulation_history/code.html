@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Space_Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-background": "#191c1e",
+              "primary-container": "#00855d",
+              "surface": "#f7f9fb",
+              "secondary-fixed-dim": "#bcc7de",
+              "on-primary-fixed": "#002114",
+              "tertiary-container": "#ba5551",
+              "secondary-container": "#d5e0f8",
+              "outline": "#6d7a72",
+              "inverse-on-surface": "#eff1f3",
+              "surface-container-low": "#f2f4f6",
+              "on-tertiary": "#ffffff",
+              "error": "#ba1a1a",
+              "on-secondary-container": "#586377",
+              "error-container": "#ffdad6",
+              "primary": "#006948",
+              "tertiary-fixed-dim": "#ffb3ae",
+              "surface-dim": "#d8dadc",
+              "on-primary-fixed-variant": "#005137",
+              "secondary-fixed": "#d8e3fb",
+              "surface-container": "#eceef0",
+              "on-tertiary-fixed": "#410004",
+              "on-primary-container": "#f5fff7",
+              "on-tertiary-container": "#fffbff",
+              "inverse-primary": "#68dba9",
+              "on-surface-variant": "#3d4a42",
+              "surface-container-lowest": "#ffffff",
+              "primary-fixed": "#85f8c4",
+              "on-surface": "#191c1e",
+              "on-tertiary-fixed-variant": "#7f2928",
+              "inverse-surface": "#2d3133",
+              "surface-tint": "#006c4a",
+              "surface-container-high": "#e6e8ea",
+              "on-secondary-fixed-variant": "#3c475a",
+              "on-error": "#ffffff",
+              "outline-variant": "#bccac0",
+              "on-secondary": "#ffffff",
+              "surface-bright": "#f7f9fb",
+              "background": "#f7f9fb",
+              "tertiary-fixed": "#ffdad7",
+              "primary-fixed-dim": "#68dba9",
+              "surface-variant": "#e0e3e5",
+              "on-error-container": "#93000a",
+              "secondary": "#545f73",
+              "on-secondary-fixed": "#111c2d",
+              "surface-container-highest": "#e0e3e5",
+              "tertiary": "#9b3e3b",
+              "on-primary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-effect {
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm">
+<nav class="flex justify-between items-center px-8 h-16 max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-8">
+<span class="font-headline text-xl font-bold tracking-tighter text-slate-900 dark:text-slate-50">PatternIQ</span>
+<div class="hidden md:flex gap-6">
+<a class="text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-300 transition-colors duration-200 ease-in-out font-['Manrope'] tracking-tight" href="#">Platform</a>
+<a class="text-emerald-700 dark:text-emerald-400 font-semibold border-b-2 border-emerald-600 transition-colors duration-200 ease-in-out font-['Manrope'] tracking-tight" href="#">Simulations</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-300 transition-colors duration-200 ease-in-out font-['Manrope'] tracking-tight" href="#">Research</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-300 transition-colors duration-200 ease-in-out font-['Manrope'] tracking-tight" href="#">Documentation</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-slate-600 active:opacity-70" data-icon="settings">settings</button>
+<button class="material-symbols-outlined text-slate-600 active:opacity-70" data-icon="account_circle">account_circle</button>
+</div>
+</nav>
+<div class="bg-slate-200 dark:bg-slate-800 h-[1px] w-full block"></div>
+</header>
+<main class="flex-grow pt-24 pb-16 px-8 max-w-screen-2xl mx-auto w-full">
+<!-- Header Section -->
+<section class="mb-12">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="font-headline text-4xl md:text-5xl font-extrabold tracking-tight text-on-surface mb-2">Simulation History</h1>
+<p class="text-secondary max-w-2xl font-body">Review past analytical runs, yield distributions, and process optimization cycles within the Precision Engineering Division.</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="bg-surface-container-high px-4 py-3 rounded-lg flex items-center gap-4">
+<div class="flex flex-col">
+<span class="font-label text-[10px] uppercase tracking-widest text-secondary">Total Runs</span>
+<span class="font-headline text-xl font-bold">1,284</span>
+</div>
+<div class="w-[1px] h-8 bg-outline-variant/30"></div>
+<div class="flex flex-col">
+<span class="font-label text-[10px] uppercase tracking-widest text-secondary">Avg Yield</span>
+<span class="font-headline text-xl font-bold text-primary">94.2%</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Search & Filter Controls -->
+<section class="mb-8 bg-surface-container-low p-4 rounded-xl flex flex-wrap items-center gap-4">
+<div class="relative flex-grow max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-lowest border-none rounded-lg focus:ring-2 focus:ring-primary/20 text-sm font-body transition-all" placeholder="Search by Run ID or Process..." type="text"/>
+</div>
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-lowest text-on-surface text-sm font-medium rounded-lg hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-lg">filter_list</span>
+<span>Filters</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-lowest text-on-surface text-sm font-medium rounded-lg hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-lg">calendar_today</span>
+<span>Date Range</span>
+</button>
+<div class="ml-auto flex items-center gap-2">
+<button class="p-2 text-primary hover:bg-primary/5 rounded-lg transition-colors">
+<span class="material-symbols-outlined">download</span>
+</button>
+<button class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-6 py-2 rounded font-semibold text-sm shadow-sm active:opacity-90 transition-all">
+                    New Run
+                </button>
+</div>
+</section>
+<!-- Data Blueprint Table -->
+<section class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50 border-b border-outline-variant/10">
+<th class="px-6 py-4 font-label text-[11px] uppercase tracking-widest text-secondary">Run ID</th>
+<th class="px-6 py-4 font-label text-[11px] uppercase tracking-widest text-secondary">Timestamp</th>
+<th class="px-6 py-4 font-label text-[11px] uppercase tracking-widest text-secondary">Process Module</th>
+<th class="px-6 py-4 font-label text-[11px] uppercase tracking-widest text-secondary">Mean Yield</th>
+<th class="px-6 py-4 font-label text-[11px] uppercase tracking-widest text-secondary">Std Dev (σ)</th>
+<th class="px-6 py-4 font-label text-[11px] uppercase tracking-widest text-secondary">Status</th>
+<th class="px-6 py-4 font-label text-[11px] uppercase tracking-widest text-secondary">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer">
+<td class="px-6 py-5">
+<span class="font-label font-bold text-sm text-primary">#PX-9921</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-sm font-medium">Oct 24, 2024</span>
+<span class="text-[10px] text-outline">14:22:10 UTC</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-medium">Lattice Diffusion V4</span>
+</td>
+<td class="px-6 py-5">
+<span class="font-headline font-bold text-lg">98.42%</span>
+</td>
+<td class="px-6 py-5">
+<span class="font-label text-sm text-secondary">0.024</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(0,105,72,0.4)]"></span>
+<span class="text-xs font-semibold uppercase tracking-wider text-primary">Completed</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<button class="p-2 opacity-0 group-hover:opacity-100 transition-opacity text-outline hover:text-primary">
+<span class="material-symbols-outlined text-xl">monitoring</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer">
+<td class="px-6 py-5">
+<span class="font-label font-bold text-sm text-primary">#PX-9920</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-sm font-medium">Oct 24, 2024</span>
+<span class="text-[10px] text-outline">11:05:44 UTC</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-medium">Thermal Stress Simulation</span>
+</td>
+<td class="px-6 py-5">
+<span class="font-headline font-bold text-lg">92.11%</span>
+</td>
+<td class="px-6 py-5">
+<span class="font-label text-sm text-secondary">0.142</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(0,105,72,0.4)]"></span>
+<span class="text-xs font-semibold uppercase tracking-wider text-primary">Completed</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<button class="p-2 opacity-0 group-hover:opacity-100 transition-opacity text-outline hover:text-primary">
+<span class="material-symbols-outlined text-xl">monitoring</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer">
+<td class="px-6 py-5">
+<span class="font-label font-bold text-sm text-primary">#PX-9919</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-sm font-medium">Oct 23, 2024</span>
+<span class="text-[10px] text-outline">23:59:01 UTC</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-medium">Optic Path Integrity</span>
+</td>
+<td class="px-6 py-5">
+<span class="font-headline font-bold text-lg text-error">74.20%</span>
+</td>
+<td class="px-6 py-5">
+<span class="font-label text-sm text-secondary">0.822</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-error shadow-[0_0_8px_rgba(186,26,26,0.4)]"></span>
+<span class="text-xs font-semibold uppercase tracking-wider text-error">Flagged</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<button class="p-2 opacity-0 group-hover:opacity-100 transition-opacity text-outline hover:text-primary">
+<span class="material-symbols-outlined text-xl">monitoring</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer">
+<td class="px-6 py-5">
+<span class="font-label font-bold text-sm text-primary">#PX-9918</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-sm font-medium">Oct 23, 2024</span>
+<span class="text-[10px] text-outline">18:12:30 UTC</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-medium">Substrate Doping Profile</span>
+</td>
+<td class="px-6 py-5">
+<span class="font-headline font-bold text-lg">95.66%</span>
+</td>
+<td class="px-6 py-5">
+<span class="font-label text-sm text-secondary">0.051</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(0,105,72,0.4)]"></span>
+<span class="text-xs font-semibold uppercase tracking-wider text-primary">Completed</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<button class="p-2 opacity-0 group-hover:opacity-100 transition-opacity text-outline hover:text-primary">
+<span class="material-symbols-outlined text-xl">monitoring</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer">
+<td class="px-6 py-5">
+<span class="font-label font-bold text-sm text-primary">#PX-9917</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-sm font-medium">Oct 23, 2024</span>
+<span class="text-[10px] text-outline">15:45:12 UTC</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-medium">Quantum Well Analysis</span>
+</td>
+<td class="px-6 py-5">
+<span class="font-headline font-bold text-lg">--%</span>
+</td>
+<td class="px-6 py-5">
+<span class="font-label text-sm text-secondary">--</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
+<span class="text-xs font-semibold uppercase tracking-wider text-secondary">Running</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<button class="p-2 opacity-0 group-hover:opacity-100 transition-opacity text-outline hover:text-primary">
+<span class="material-symbols-outlined text-xl">monitoring</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 bg-surface-container-low/30 border-t border-outline-variant/10 flex items-center justify-between">
+<span class="text-xs font-label text-secondary tracking-tight">Displaying 1 - 10 of 1,284 simulation cycles</span>
+<div class="flex gap-1">
+<button class="p-2 hover:bg-surface-container-high rounded-md transition-colors disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="px-3 py-1 bg-primary text-on-primary rounded text-sm font-bold">1</button>
+<button class="px-3 py-1 hover:bg-surface-container-high rounded text-sm font-medium transition-colors">2</button>
+<button class="px-3 py-1 hover:bg-surface-container-high rounded text-sm font-medium transition-colors">3</button>
+<span class="px-2 py-1 text-secondary">...</span>
+<button class="px-3 py-1 hover:bg-surface-container-high rounded text-sm font-medium transition-colors">129</button>
+<button class="p-2 hover:bg-surface-container-high rounded-md transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Insights Summary (Bento Fragment) -->
+<section class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="md:col-span-2 p-8 rounded-xl bg-surface-container-low border border-outline-variant/10 flex flex-col justify-between overflow-hidden relative min-h-[200px]">
+<div class="relative z-10">
+<h3 class="font-headline font-bold text-xl mb-2">Yield Trends</h3>
+<p class="text-secondary text-sm mb-6 max-w-sm">Performance metrics indicate a 4.2% increase in Mean Yield across all Lattice Diffusion simulations this month.</p>
+</div>
+<div class="flex items-end gap-2 h-24 relative z-10">
+<div class="flex-grow bg-primary/10 rounded-t-sm h-[40%] transition-all hover:bg-primary/20"></div>
+<div class="flex-grow bg-primary/10 rounded-t-sm h-[60%] transition-all hover:bg-primary/20"></div>
+<div class="flex-grow bg-primary/10 rounded-t-sm h-[55%] transition-all hover:bg-primary/20"></div>
+<div class="flex-grow bg-primary/10 rounded-t-sm h-[80%] transition-all hover:bg-primary/20"></div>
+<div class="flex-grow bg-primary/10 rounded-t-sm h-[70%] transition-all hover:bg-primary/20"></div>
+<div class="flex-grow bg-primary/10 rounded-t-sm h-[90%] transition-all hover:bg-primary/20"></div>
+<div class="flex-grow bg-primary/10 rounded-t-sm h-[95%] transition-all hover:bg-primary/20"></div>
+</div>
+<!-- Abstract Technical Background Ornament -->
+<div class="absolute -right-12 -bottom-12 opacity-5 pointer-events-none">
+<span class="material-symbols-outlined text-[200px]" data-icon="hub">hub</span>
+</div>
+</div>
+<div class="p-8 rounded-xl bg-gradient-to-br from-on-surface to-slate-800 text-white shadow-xl relative overflow-hidden flex flex-col justify-between">
+<div class="relative z-10">
+<span class="font-label text-[10px] tracking-widest text-primary-fixed/60 uppercase">System Status</span>
+<h3 class="font-headline font-bold text-2xl mt-2 mb-4">Precision Engine V4.2</h3>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary-fixed" data-icon="check_circle">check_circle</span>
+<span class="text-sm font-body opacity-90">All nodes operational</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-fixed" data-icon="memory">memory</span>
+<span class="text-sm font-body opacity-90">Memory usage: 14%</span>
+</div>
+</div>
+<button class="relative z-10 mt-8 w-full py-3 bg-primary text-white rounded font-bold text-sm tracking-wide hover:bg-primary-container transition-colors">
+                    Access Technical Logs
+                </button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-auto bg-slate-100 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 px-12 py-16 w-full max-w-screen-2xl mx-auto">
+<div class="flex flex-col gap-4">
+<span class="font-['Manrope'] font-extrabold text-slate-800 dark:text-slate-200 text-2xl">PatternIQ</span>
+<p class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 dark:text-slate-500 max-w-sm">
+                    © 2024 PatternIQ Yield Systems. Precision Engineering Division.
+                </p>
+</div>
+<div class="flex flex-wrap gap-x-8 gap-y-4 md:justify-end">
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-all duration-300" href="#">Privacy Policy</a>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-all duration-300" href="#">Terms of Service</a>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-all duration-300" href="#">API Reference</a>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-all duration-300" href="#">Status</a>
+<a class="font-['Space_Grotesk'] text-xs uppercase tracking-widest text-slate-500 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-all duration-300" href="#">Support</a>
+</div>
+</div>
+</footer>
+</body></html>
