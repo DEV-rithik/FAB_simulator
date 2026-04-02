@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.shortcuts import redirect, render
+from django.utils.http import url_has_allowed_host_and_scheme
 
 
 def register_view(request):
@@ -42,11 +43,11 @@ def login_view(request):
         if user:
             login(request, user)
             next_url = request.GET.get('next', '')
-            # Validate redirect URL to prevent open redirect attacks
-            from django.utils.http import url_has_allowed_host_and_scheme
+            # Validate redirect URL to prevent open redirect attacks.
+            # allowed_hosts must be a collection; wrap in a set.
             if next_url and url_has_allowed_host_and_scheme(
                 url=next_url,
-                allowed_hosts=request.get_host(),
+                allowed_hosts={request.get_host()},
                 require_https=request.is_secure(),
             ):
                 return redirect(next_url)

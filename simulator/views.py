@@ -119,7 +119,7 @@ def export_csv(request, pk):
     writer.writerow(['Mean Yield (%)', f'{sim_run.mean_yield:.2f}' if sim_run.mean_yield is not None else 'N/A'])
     writer.writerow(['Std Dev (%)',    f'{sim_run.std_yield:.2f}'  if sim_run.std_yield  is not None else 'N/A'])
     writer.writerow(['Best Yield (%)', f'{sim_run.best_yield:.2f}' if sim_run.best_yield is not None else 'N/A'])
-    writer.writerow(['Worst Yield (%)',f'{sim_run.worst_yield:.2f}'if sim_run.worst_yield is not None else 'N/A'])
+    writer.writerow(['Worst Yield (%)', f'{sim_run.worst_yield:.2f}' if sim_run.worst_yield is not None else 'N/A'])
     writer.writerow(['Total Dies',    sim_run.total_dies or 'N/A'])
     writer.writerow([])
 
