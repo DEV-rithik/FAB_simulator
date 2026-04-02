@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% block title %}Simulation History | PatternIQ{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto space-y-10">
+  <!-- Header -->
+  <section class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+    <div>
+      <h1 class="font-headline text-4xl md:text-5xl font-extrabold tracking-tight text-on-surface mb-2">Simulation History</h1>
+      <p class="text-secondary max-w-2xl font-body">Review past analytical runs, yield distributions, and process optimization cycles within the Precision Engineering Division.</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="bg-surface-container-high px-4 py-3 rounded-lg flex items-center gap-4">
+        <div class="flex flex-col">
+          <span class="font-label text-[10px] uppercase tracking-widest text-secondary">Total Runs</span>
+          <span class="font-headline text-xl font-bold">{{ total_runs }}</span>
+        </div>
+        <div class="w-[1px] h-8 bg-outline-variant/30"></div>
+        <div class="flex flex-col">
+          <span class="font-label text-[10px] uppercase tracking-widest text-secondary">Avg Yield</span>
+          <span class="font-headline text-xl font-bold text-primary">
+            {% if avg_yield %}{{ avg_yield|floatformat:1 }}%{% else %}--{% endif %}
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Controls -->
+  <section class="bg-surface-container-low p-4 rounded-xl flex flex-wrap items-center gap-4">
+    <div class="relative flex-grow max-w-md">
+      <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
+      <input class="w-full pl-10 pr-4 py-2 bg-surface-container-lowest border-none rounded-lg focus:ring-2 focus:ring-primary/20 text-sm font-body transition-all"
+             placeholder="Search by Run ID…" type="text" id="search-input"/>
+    </div>
+    <div class="ml-auto">
+      <a href="{% url 'simulator:simulate' %}"
+         class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-6 py-2 rounded font-semibold text-sm shadow-sm hover:opacity-90 transition-all flex items-center gap-2">
+        <span class="material-symbols-outlined text-[18px]">add_circle</span>
+        New Run
+      </a>
+    </div>
+  </section>
+
+  <!-- History Table -->
+  <section class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse" id="history-table">
+        <thead>
+          <tr class="bg-surface-container-high/50 border-b border-outline-variant/10">
+            <th class="px-6 py-4 font-label text-[11px] uppercase tracking-widest text-secondary">Run ID</th>
+            <th class="px-6 py-4 font-label text-[11px] uppercase tracking-widest text-secondary">Timestamp</th>
+            <th class="px-6 py-4 font-label text-[11px] uppercase tracking-widest text-secondary">Config</th>
+            <th class="px-6 py-4 font-label text-[11px] uppercase tracking-widest text-secondary">Mean Yield</th>
+            <th class="px-6 py-4 font-label text-[11px] uppercase tracking-widest text-secondary">Std Dev (σ)</th>
+            <th class="px-6 py-4 font-label text-[11px] uppercase tracking-widest text-secondary">Status</th>
+            <th class="px-6 py-4 font-label text-[11px] uppercase tracking-widest text-secondary">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-outline-variant/5">
+          {% for run in runs %}
+          <tr class="hover:bg-surface-container-low transition-colors group cursor-pointer" data-run-id="{{ run.pk }}">
+            <td class="px-6 py-5">
+              <span class="font-label font-bold text-sm text-primary">#PX-{{ run.pk }}</span>
+            </td>
+            <td class="px-6 py-5">
+              <div class="flex flex-col">
+                <span class="text-sm font-medium">{{ run.created_at|date:"M d, Y" }}</span>
+                <span class="text-[10px] text-outline">{{ run.created_at|time:"H:i:s" }} UTC</span>
+              </div>
+            </td>
+            <td class="px-6 py-5">
+              <span class="text-sm font-medium text-slate-600">
+                {{ run.input_payload.wafer_diameter_mm|default:"300" }}mm ·
+                {{ run.input_payload.die_size_mm|default:"5" }}mm die ·
+                {{ run.input_payload.mc_runs|default:"10000" }} iters
+              </span>
+            </td>
+            <td class="px-6 py-5">
+              <span class="font-headline font-bold text-lg {% if run.mean_yield and run.mean_yield < 80 %}text-error{% endif %}">
+                {% if run.mean_yield %}{{ run.mean_yield|floatformat:2 }}%{% else %}--{% endif %}
+              </span>
+            </td>
+            <td class="px-6 py-5">
+              <span class="font-label text-sm text-secondary">
+                {% if run.std_yield %}{{ run.std_yield|floatformat:3 }}{% else %}--{% endif %}
+              </span>
+            </td>
+            <td class="px-6 py-5">
+              {% if run.status == 'completed' %}
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(0,105,72,0.4)]"></span>
+                <span class="text-xs font-semibold uppercase tracking-wider text-primary">Completed</span>
+              </div>
+              {% elif run.status == 'running' %}
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
+                <span class="text-xs font-semibold uppercase tracking-wider text-secondary">Running</span>
+              </div>
+              {% else %}
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-error"></span>
+                <span class="text-xs font-semibold uppercase tracking-wider text-error">Failed</span>
+              </div>
+              {% endif %}
+            </td>
+            <td class="px-6 py-5">
+              <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                {% if run.status == 'completed' %}
+                <a href="{% url 'simulator:results' run.pk %}"
+                   class="p-2 text-outline hover:text-primary rounded-lg hover:bg-primary/5 transition-colors" title="View Results">
+                  <span class="material-symbols-outlined text-xl">monitoring</span>
+                </a>
+                <a href="{% url 'simulator:export_csv' run.pk %}"
+                   class="p-2 text-outline hover:text-primary rounded-lg hover:bg-primary/5 transition-colors" title="Export CSV">
+                  <span class="material-symbols-outlined text-xl">table_view</span>
+                </a>
+                <a href="{% url 'simulator:export_pdf' run.pk %}"
+                   class="p-2 text-outline hover:text-primary rounded-lg hover:bg-primary/5 transition-colors" title="Export PDF">
+                  <span class="material-symbols-outlined text-xl">picture_as_pdf</span>
+                </a>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="px-6 py-16 text-center">
+              <div class="flex flex-col items-center gap-4">
+                <span class="material-symbols-outlined text-5xl text-outline/40">science</span>
+                <p class="text-secondary font-body">No simulation runs yet.</p>
+                <a href="{% url 'simulator:simulate' %}"
+                   class="mt-2 px-6 py-2.5 rounded-lg font-semibold text-on-primary bg-gradient-to-br from-primary to-primary-container shadow hover:opacity-90 transition text-sm">
+                  Run Your First Simulation
+                </a>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Insights -->
+  {% if runs %}
+  <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="md:col-span-2 p-8 rounded-xl bg-surface-container-low border border-outline-variant/10 flex flex-col justify-between overflow-hidden relative min-h-[160px]">
+      <div class="relative z-10">
+        <h3 class="font-headline font-bold text-xl mb-2">Yield Trends</h3>
+        <p class="text-secondary text-sm max-w-sm">All completed Monte Carlo runs for this account.</p>
+      </div>
+      <div class="flex items-end gap-1 h-16 relative z-10 mt-4">
+        {% for run in runs %}
+          {% if run.mean_yield %}
+          <div class="flex-grow bg-primary/20 rounded-t-sm hover:bg-primary/40 transition-all"
+               style="height: {{ run.mean_yield|floatformat:0 }}%;"
+               title="Run #{{ run.pk }}: {{ run.mean_yield|floatformat:1 }}%"></div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="p-8 rounded-xl bg-gradient-to-br from-on-surface to-slate-800 text-white shadow-xl flex flex-col justify-between">
+      <div>
+        <span class="font-label text-[10px] tracking-widest text-primary-fixed/60 uppercase">System Status</span>
+        <h3 class="font-headline font-bold text-2xl mt-2 mb-4">Precision Engine V4.2</h3>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="material-symbols-outlined text-primary-fixed">check_circle</span>
+          <span class="text-sm font-body opacity-90">All nodes operational</span>
+        </div>
+      </div>
+      <a href="{% url 'simulator:simulate' %}"
+         class="mt-6 w-full py-3 bg-primary text-white rounded font-bold text-sm tracking-wide hover:bg-primary-container transition-colors text-center block">
+        Launch New Simulation
+      </a>
+    </div>
+  </section>
+  {% endif %}
+</div>
+
+<script>
+  // Simple client-side search by run ID
+  document.getElementById('search-input').addEventListener('input', function() {
+    const q = this.value.toLowerCase();
+    document.querySelectorAll('#history-table tbody tr[data-run-id]').forEach(row => {
+      const id = row.dataset.runId;
+      row.style.display = id.includes(q) || q === '' ? '' : 'none';
+    });
+  });
+</script>
+{% endblock %}

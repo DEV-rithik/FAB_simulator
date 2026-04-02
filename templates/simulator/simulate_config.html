@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+{% block title %}Simulation Config | PatternIQ{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto space-y-10">
+  <!-- Header -->
+  <header class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+    <div class="space-y-2">
+      <div class="flex items-center gap-3">
+        <span class="font-label text-xs uppercase tracking-widest text-primary font-bold">Yield Optimizer v2.4</span>
+        <span class="h-[1px] w-12 bg-outline-variant/30"></span>
+        <span class="font-label text-xs uppercase tracking-widest text-slate-400">SKY130 130nm Process</span>
+      </div>
+      <h1 class="font-headline text-4xl font-extrabold tracking-tight text-slate-900">Simulation Configuration</h1>
+      <p class="text-slate-500 max-w-2xl font-body">Define process nodes, physical constraints, and stochastic parameters for high-precision Monte Carlo yield analysis.</p>
+    </div>
+  </header>
+
+  <form method="post" id="sim-form">
+    {% csrf_token %}
+    <div class="grid grid-cols-12 gap-8">
+      <!-- Left Column: Process Config -->
+      <div class="col-span-12 lg:col-span-5 flex flex-col gap-8">
+        <!-- Process Architecture Card -->
+        <section class="bg-surface-container-lowest p-8 rounded-xl relative overflow-hidden shadow-sm">
+          <div class="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+            <span class="material-symbols-outlined text-8xl">precision_manufacturing</span>
+          </div>
+          <h2 class="font-headline text-xl font-bold mb-8 text-slate-900 flex items-center gap-2">
+            <span class="w-2 h-6 bg-primary rounded-full"></span>
+            Process Configuration
+          </h2>
+          <div class="space-y-8">
+            <!-- Node / Wafer -->
+            <div class="grid grid-cols-2 gap-6">
+              <div class="space-y-2">
+                <label class="font-label text-xs uppercase tracking-widest text-slate-500 font-bold">Process Node</label>
+                <div class="bg-surface-container-low p-4 rounded border-b-2 border-primary">
+                  <span class="font-headline font-bold text-slate-800">SKY130 130nm</span>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <label class="font-label text-xs uppercase tracking-widest text-slate-500 font-bold">Wafer Diameter</label>
+                <select name="wafer_diameter_mm"
+                        class="w-full bg-surface-container-low p-4 rounded border-b-2 border-slate-300 font-headline font-bold text-slate-800 focus:ring-0 focus:border-primary">
+                  <option value="300" selected>300 mm</option>
+                  <option value="200">200 mm</option>
+                  <option value="150">150 mm</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Die Size -->
+            <div class="space-y-3">
+              <label class="font-label text-xs uppercase tracking-widest text-slate-500 font-bold">Active Die Dimensions</label>
+              <div class="flex items-center gap-4">
+                <div class="flex-1 bg-surface-container-low p-4 rounded flex items-center justify-between">
+                  <span class="font-label text-xs text-slate-400">Width / Height (mm)</span>
+                  <input name="die_size_mm" type="number" min="1" max="30" step="0.5" value="5.0"
+                         class="w-20 text-right font-headline font-bold text-slate-800 bg-transparent border-none focus:ring-0 p-0"/>
+                </div>
+              </div>
+            </div>
+
+            <!-- Monte Carlo Slider -->
+            <div class="space-y-4 pt-4">
+              <div class="flex justify-between items-center">
+                <label class="font-label text-xs uppercase tracking-widest text-slate-500 font-bold">Monte Carlo Runs</label>
+                <span id="mc-label" class="bg-primary/10 text-primary px-3 py-1 rounded font-label font-bold text-sm">10,000 Iterations</span>
+              </div>
+              <input id="mc-range" name="mc_runs" type="range" min="500" max="50000" step="500" value="10000"
+                     class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-primary"/>
+              <div class="flex justify-between text-[10px] font-label text-slate-400 uppercase tracking-tighter">
+                <span>Low Fi (500)</span>
+                <span>Standard (10k)</span>
+                <span>Production (50k)</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Status Banner -->
+        <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-4 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="relative flex h-3 w-3">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+            </span>
+            <span class="font-label text-xs font-bold text-emerald-800 uppercase tracking-widest">Compute Engine: Available</span>
+          </div>
+          <div class="text-[10px] font-label text-emerald-800/50 uppercase">SKY130 Process</div>
+        </div>
+      </div>
+
+      <!-- Right Column: Parameter Specs -->
+      <div class="col-span-12 lg:col-span-7">
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col h-full">
+          <div class="p-8 border-b border-outline-variant/10 flex justify-between items-center">
+            <h2 class="font-headline text-xl font-bold text-slate-900 flex items-center gap-2">
+              <span class="w-2 h-6 bg-primary rounded-full"></span>
+              Parameter Specifications
+            </h2>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left">
+              <thead class="bg-surface-container-low font-label text-[10px] uppercase tracking-[0.2em] text-slate-400 font-bold">
+                <tr>
+                  <th class="px-6 py-4">Parameter</th>
+                  <th class="px-6 py-4">Nominal</th>
+                  <th class="px-6 py-4">Sigma (σ)</th>
+                  <th class="px-6 py-4">Spec Window</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <!-- Vth0 -->
+                <tr class="hover:bg-slate-50 transition-colors">
+                  <td class="px-6 py-6">
+                    <div class="flex flex-col">
+                      <span class="font-headline font-bold text-slate-800">Vth0</span>
+                      <span class="font-label text-[10px] text-slate-400 uppercase">Threshold Voltage</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-6">
+                    <input name="vth0_nominal" type="number" step="0.001" value="{{ params.vth0.nominal }}"
+                           class="w-24 text-sm font-semibold text-slate-600 bg-surface-container-low border border-outline-variant/30 rounded px-2 py-1 focus:ring-1 focus:ring-primary"/>
+                    <span class="text-xs text-slate-400 ml-1">{{ params.vth0.unit }}</span>
+                  </td>
+                  <td class="px-6 py-6">
+                    <input name="vth0_sigma" type="number" step="0.001" value="{{ params.vth0.sigma }}"
+                           class="w-24 text-sm font-semibold text-slate-600 bg-surface-container-low border border-outline-variant/30 rounded px-2 py-1 focus:ring-1 focus:ring-primary"/>
+                  </td>
+                  <td class="px-6 py-6 text-xs text-slate-500 font-body">
+                    [{{ spec.vth0.0 }}, {{ spec.vth0.1 }}] V
+                  </td>
+                </tr>
+                <!-- Tox -->
+                <tr class="hover:bg-slate-50 transition-colors">
+                  <td class="px-6 py-6">
+                    <div class="flex flex-col">
+                      <span class="font-headline font-bold text-slate-800">Tox</span>
+                      <span class="font-label text-[10px] text-slate-400 uppercase">Gate Oxide Thickness</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-6">
+                    <input name="tox_nominal" type="number" step="0.01" value="{{ params.tox.nominal }}"
+                           class="w-24 text-sm font-semibold text-slate-600 bg-surface-container-low border border-outline-variant/30 rounded px-2 py-1 focus:ring-1 focus:ring-primary"/>
+                    <span class="text-xs text-slate-400 ml-1">{{ params.tox.unit }}</span>
+                  </td>
+                  <td class="px-6 py-6">
+                    <input name="tox_sigma" type="number" step="0.01" value="{{ params.tox.sigma }}"
+                           class="w-24 text-sm font-semibold text-slate-600 bg-surface-container-low border border-outline-variant/30 rounded px-2 py-1 focus:ring-1 focus:ring-primary"/>
+                  </td>
+                  <td class="px-6 py-6 text-xs text-slate-500 font-body">
+                    [{{ spec.tox.0 }}, {{ spec.tox.1 }}] nm
+                  </td>
+                </tr>
+                <!-- u0 -->
+                <tr class="hover:bg-slate-50 transition-colors">
+                  <td class="px-6 py-6">
+                    <div class="flex flex-col">
+                      <span class="font-headline font-bold text-slate-800">μ₀ (u0)</span>
+                      <span class="font-label text-[10px] text-slate-400 uppercase">Carrier Mobility</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-6">
+                    <input name="u0_nominal" type="number" step="1" value="{{ params.u0.nominal }}"
+                           class="w-24 text-sm font-semibold text-slate-600 bg-surface-container-low border border-outline-variant/30 rounded px-2 py-1 focus:ring-1 focus:ring-primary"/>
+                    <span class="text-xs text-slate-400 ml-1">cm²/Vs</span>
+                  </td>
+                  <td class="px-6 py-6">
+                    <input name="u0_sigma" type="number" step="1" value="{{ params.u0.sigma }}"
+                           class="w-24 text-sm font-semibold text-slate-600 bg-surface-container-low border border-outline-variant/30 rounded px-2 py-1 focus:ring-1 focus:ring-primary"/>
+                  </td>
+                  <td class="px-6 py-6 text-xs text-slate-500 font-body">
+                    [{{ spec.u0.0 }}, {{ spec.u0.1 }}] cm²/Vs
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="mt-auto p-8 bg-surface-container-high/30">
+            <div class="flex items-start gap-4">
+              <span class="material-symbols-outlined text-primary p-2 bg-primary/10 rounded">info</span>
+              <div>
+                <p class="text-xs font-headline font-bold text-slate-800 mb-1">Statistical Correlation Detected</p>
+                <p class="text-xs text-slate-500 leading-relaxed font-body">Parameters Tox and Vth0 show a high degree of linear correlation (r=0.82) based on historical SKY130 data. Monte Carlo runs will be adjusted for covariant sampling.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit buttons -->
+    <div class="flex gap-3 justify-end mt-6">
+      <a href="{% url 'simulator:dashboard' %}"
+         class="px-6 py-2.5 rounded-lg font-semibold text-slate-700 bg-surface-container-high hover:bg-surface-dim transition-all flex items-center gap-2">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+        Cancel
+      </a>
+      <button type="submit" id="submit-btn"
+              class="px-6 py-2.5 rounded-lg font-semibold text-on-primary bg-gradient-to-br from-primary to-primary-container shadow-lg shadow-primary/20 hover:opacity-90 transition-all flex items-center gap-2">
+        <span class="material-symbols-outlined text-[20px]">play_arrow</span>
+        Initialize Run
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Update MC label as slider moves
+  const range = document.getElementById('mc-range');
+  const label = document.getElementById('mc-label');
+  range.addEventListener('input', () => {
+    label.textContent = Number(range.value).toLocaleString() + ' Iterations';
+  });
+
+  // Show loading state on submit
+  document.getElementById('sim-form').addEventListener('submit', function() {
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">autorenew</span> Running…';
+  });
+</script>
+{% endblock %}
