@@ -15,6 +15,15 @@ from .models import SimulationRun
 from .services import DEFAULT_PROCESS_PARAMS, DEFAULT_SPEC_LIMITS, run_simulation
 
 
+# ── Landing page ─────────────────────────────────────────────────────────────
+
+def landing(request):
+    """Public landing page. Redirect authenticated users to the dashboard."""
+    if request.user.is_authenticated:
+        return redirect('simulator:dashboard')
+    return render(request, 'landing.html')
+
+
 # ── Dashboard (home) ────────────────────────────────────────────────────────
 
 @login_required
