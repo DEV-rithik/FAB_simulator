@@ -63,6 +63,7 @@
       <div class="flex items-center gap-2 mt-2">
         <div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
           {% with stability=run.std_yield %}
+          {# σ < 0.5% = high stability (90%), σ < 2% = moderate (70%), else low (40%) #}
           <div class="h-full bg-primary" style="width: {% if stability < 0.5 %}90{% elif stability < 2 %}70{% else %}40{% endif %}%"></div>
           {% endwith %}
         </div>
