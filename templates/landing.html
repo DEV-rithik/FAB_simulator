@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PatternIQ | Semiconductor Yield Simulation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#f7f9fb",
+            "on-primary-container": "#f5fff7",
+            "surface-bright": "#f7f9fb",
+            "secondary-fixed-dim": "#bcc7de",
+            "secondary-container": "#d5e0f8",
+            "surface-dim": "#d8dadc",
+            "on-error": "#ffffff",
+            "on-surface-variant": "#3d4a42",
+            "surface-variant": "#e0e3e5",
+            "surface-container-low": "#f2f4f6",
+            "tertiary-container": "#ba5551",
+            "on-tertiary-fixed": "#410004",
+            "primary-fixed": "#85f8c4",
+            "surface-container-highest": "#e0e3e5",
+            "surface-container": "#eceef0",
+            "background": "#f7f9fb",
+            "on-primary-fixed-variant": "#005137",
+            "outline": "#6d7a72",
+            "tertiary-fixed-dim": "#ffb3ae",
+            "on-tertiary-container": "#fffbff",
+            "on-surface": "#191c1e",
+            "secondary-fixed": "#d8e3fb",
+            "primary-fixed-dim": "#68dba9",
+            "surface-tint": "#006c4a",
+            "primary": "#006948",
+            "error-container": "#ffdad6",
+            "on-primary-fixed": "#002114",
+            "on-error-container": "#93000a",
+            "secondary": "#545f73",
+            "on-secondary-container": "#586377",
+            "surface-container-high": "#e6e8ea",
+            "outline-variant": "#bccac0",
+            "on-background": "#191c1e",
+            "error": "#ba1a1a",
+            "inverse-surface": "#2d3133",
+            "on-primary": "#ffffff",
+            "tertiary-fixed": "#ffdad7",
+            "on-secondary": "#ffffff",
+            "inverse-primary": "#68dba9",
+            "inverse-on-surface": "#eff1f3",
+            "on-tertiary-fixed-variant": "#7f2928",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-fixed": "#111c2d",
+            "on-tertiary": "#ffffff",
+            "on-secondary-fixed-variant": "#3c475a",
+            "primary-container": "#00855d",
+            "tertiary": "#9b3e3b"
+          },
+          fontFamily: {
+            "headline": ["Manrope"],
+            "body": ["Inter"],
+            "label": ["Space Grotesk"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+        },
+      },
+    }
+</script>
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .blueprint-grid {
+        background-image: radial-gradient(circle, #bccac0 1px, transparent 1px);
+        background-size: 40px 40px;
+        background-position: center;
+    }
+
+    /* Harvard CfA Style Animations */
+    .reveal-on-scroll {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 1.4s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        will-change: transform, opacity;
+    }
+    .reveal-on-scroll.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Staggering Delays */
+    .stagger-1 { transition-delay: 150ms; }
+    .stagger-2 { transition-delay: 300ms; }
+    .stagger-3 { transition-delay: 450ms; }
+    .stagger-4 { transition-delay: 600ms; }
+
+    /* Storytelling Line Animation */
+    .story-line {
+        display: inline-block;
+        overflow: hidden;
+        vertical-align: bottom;
+    }
+    .story-word {
+        display: inline-block;
+        transform: translateY(100%);
+        opacity: 0;
+        transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .story-word.active {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    /* Hero Parallax Enhancement */
+    .parallax-container {
+        overflow: hidden;
+    }
+    .parallax-bg {
+        transform: scale(1.2) translateY(0);
+        will-change: transform;
+        transition: transform 0.1s linear;
+    }
+
+    /* Image Reveal Effect */
+    .image-reveal-container {
+        overflow: hidden;
+        position: relative;
+    }
+    .image-reveal-img {
+        transform: scale(1.1);
+        transition: transform 2s cubic-bezier(0.2, 0.8, 0.2, 1), filter 2s ease;
+        filter: brightness(0.8) contrast(1.1);
+    }
+    .image-reveal-container.active .image-reveal-img {
+        transform: scale(1);
+        filter: brightness(1) contrast(1);
+    }
+    .image-reveal-container:hover .image-reveal-img {
+        transform: scale(1.05);
+    }
+
+    .glass-header {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+</style>
+</head>
+<body class="bg-surface font-body text-on-surface overflow-x-hidden">
+<header class="fixed top-0 left-0 right-0 z-[60] glass-header transition-all duration-500">
+<nav class="flex justify-between items-center w-full px-8 py-5 max-w-screen-2xl mx-auto">
+    <div class="flex items-center gap-12">
+        <a class="text-2xl font-black tracking-tighter text-slate-900" href="/">PatternIQ</a>
+        <div class="hidden md:flex items-center gap-8">
+            <a class="text-emerald-700 font-bold border-b-2 border-emerald-700 pb-1" href="#">Platform</a>
+            <a class="text-slate-600 font-medium hover:text-slate-900 transition-colors" href="#">Simulations</a>
+            <a class="text-slate-600 font-medium hover:text-slate-900 transition-colors" href="#">Research</a>
+            <a class="text-slate-600 font-medium hover:text-slate-900 transition-colors" href="#">Documentation</a>
+        </div>
+    </div>
+    <div class="flex items-center gap-6">
+        <div class="hidden lg:flex items-center bg-white/50 border border-slate-200 px-4 py-2 rounded">
+            <span class="material-symbols-outlined text-outline text-sm">search</span>
+            <span class="ml-2 text-sm text-outline font-label">SEARCH</span>
+        </div>
+        <a href="{% url 'auth:login' %}" class="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold hover:shadow-lg hover:shadow-primary/20 transition-all">
+            Sign In
+        </a>
+    </div>
+</nav>
+</header>
+<main>
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex flex-col justify-center parallax-container pt-20">
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-gradient-to-r from-surface via-surface/40 to-transparent z-10"></div>
+            <img alt="High-resolution close-up of a semiconductor wafer with intricate golden circuit patterns"
+                 class="w-full h-full object-cover parallax-bg" id="hero-parallax-img"
+                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlqshiyx7iFoGng88A9Eh7IyiKtyioZp4uRhoL1Bj8R-lXE76tuSYSYAM32E-AXgOmJVhYgDcZrKFkoFyqli_-tEpWleKu2JQNceX44cPWbBFjV_IZOQH7I1Lz_a0BvOkYlX1acNYGYzTsUwZButYajTRSu1hJ15QSeVeUfa9GLrNUjLX6docTrbWB5y28FqcmYSSQVx0F9zLjdJUbMMo-sL335kNM7VFgz8KwBGTwGqoON0VwwxKdIV4NvY1RKzDHEX7eAuNBv_4x"/>
+        </div>
+        <div class="relative z-20 max-w-screen-2xl mx-auto px-8 w-full">
+            <div class="max-w-4xl">
+                <div class="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full mb-10 reveal-on-scroll">
+                    <span class="font-label text-xs tracking-widest font-bold uppercase">PRECISION SEMICONDUCTOR SIMULATION</span>
+                </div>
+                <h1 class="text-6xl md:text-8xl lg:text-[100px] font-bold font-headline tracking-tight leading-[0.95] text-on-surface mb-10 reveal-on-scroll">
+                    Predict yield <br/>before tapeout
+                </h1>
+                <p class="text-xl md:text-2xl text-on-surface-variant font-body leading-relaxed max-w-2xl reveal-on-scroll stagger-1" id="mission-statement">
+                    Every defective chip costs money. Our Semiconductor Fab Yield Simulator lets engineers model the impact of process variation and defect density on manufacturing yield — powered by the open-source SKY130 PDK. No fab required. Just fast, accurate insights to optimize your process before it hits production.
+                </p>
+                <div class="mt-14 flex flex-wrap gap-8 reveal-on-scroll stagger-2">
+                    <a href="{% url 'auth:login' %}" class="bg-primary text-on-primary px-10 py-5 rounded-xl font-bold text-xl hover:scale-[0.98] transition-all shadow-2xl shadow-primary/30">
+                        Start Simulation
+                    </a>
+                    <button class="flex items-center gap-3 px-8 py-4 font-label font-bold text-on-surface hover:text-primary transition-colors text-lg">
+                        <span class="material-symbols-outlined text-3xl">play_circle</span>
+                        WATCH THE PROCESS
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="absolute right-0 bottom-0 w-1/2 h-2/3 blueprint-grid opacity-10 pointer-events-none"></div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-32 bg-white relative z-30">
+        <div class="max-w-screen-2xl mx-auto px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-16">
+                <div class="flex flex-col gap-6 reveal-on-scroll">
+                    <span class="text-primary font-label text-sm font-bold tracking-[0.3em]">METRIC_01</span>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-8xl font-headline font-extrabold text-on-surface tracking-tighter">72.4</span>
+                        <span class="text-3xl font-label text-primary font-bold">%</span>
+                    </div>
+                    <p class="text-on-surface-variant font-body font-medium text-lg max-w-[240px] leading-relaxed">Average Yield Prediction Accuracy across simulated nodes.</p>
+                </div>
+                <div class="flex flex-col gap-6 reveal-on-scroll stagger-1">
+                    <span class="text-primary font-label text-sm font-bold tracking-[0.3em]">METRIC_02</span>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-8xl font-headline font-extrabold text-on-surface tracking-tighter">10K</span>
+                        <span class="text-3xl font-label text-primary font-bold">Wafers</span>
+                    </div>
+                    <p class="text-on-surface-variant font-body font-medium text-lg max-w-[240px] leading-relaxed">Simulated in less than 90 seconds on a standard workstation.</p>
+                </div>
+                <div class="flex flex-col gap-6 reveal-on-scroll stagger-2">
+                    <span class="text-primary font-label text-sm font-bold tracking-[0.3em]">METRIC_03</span>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-8xl font-headline font-extrabold text-on-surface tracking-tighter">PDK</span>
+                        <span class="text-3xl font-label text-primary font-bold">SKY130</span>
+                    </div>
+                    <p class="text-on-surface-variant font-body font-medium text-lg max-w-[240px] leading-relaxed">Native support for open-source manufacturing validation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visual Break Section 1 -->
+    <section class="py-24 px-8 max-w-screen-2xl mx-auto">
+        <div class="image-reveal-container rounded-[2rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.2)] reveal-on-scroll">
+            <img alt="Clean-room technician with holographic microchip"
+                 class="w-full h-[600px] object-cover image-reveal-img"
+                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvzeSmLRWC9FwzK9XTowHOFMTKXxtJEYppleLP6cCM38XJSsYB1mDGFhSVFQsQjrCFXP5Edr2oMbZ5qIA2-4EKP7KC7vGUz2ORjqVgK2Vy5ryD6xkVfzVfi95D1IdmevsS9_2I9xR9aZESqOOxwTZEonXi-ds4kK6FYlwqkt52dDMndpUM4xq-zn1Ak8ymD1I0ubuLtFcwsq5QEY-5FjlbPSrddtrPXR8GL-Igk6gETilF4qdTc9_UI5Mfpj9MccYyHii1fMSwQL8K"/>
+            <div class="absolute bottom-12 left-12 max-w-xl text-white">
+                <h3 class="text-4xl font-headline font-bold mb-4">Precision Engineering at Scale</h3>
+                <p class="text-lg opacity-90">Bridging the gap between architectural design and physical realization with high-fidelity holographic modeling.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Bento Grid -->
+    <section class="py-32 bg-surface" id="ecosystem-section">
+        <div class="max-w-screen-2xl mx-auto px-8">
+            <div class="mb-24 max-w-3xl reveal-on-scroll">
+                <h2 class="text-5xl md:text-7xl font-headline font-bold text-on-surface mb-8 tracking-tight">Simulation Ecosystem</h2>
+                <p class="text-xl md:text-2xl text-on-surface-variant leading-relaxed">We merge the rigidity of physical manufacturing with the agility of cloud-native simulation, creating a seamless feedback loop for silicon excellence.</p>
+            </div>
+            <div class="grid grid-cols-12 gap-10">
+                <!-- Large Feature Card -->
+                <div class="col-span-12 lg:col-span-8 bg-white p-14 rounded-3xl shadow-xl shadow-slate-200/50 relative overflow-hidden group reveal-on-scroll">
+                    <div class="relative z-10 h-full flex flex-col justify-between">
+                        <div>
+                            <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-8">
+                                <span class="material-symbols-outlined text-primary text-4xl">architecture</span>
+                            </div>
+                            <h3 class="text-4xl font-headline font-bold mb-6 text-slate-900">Monte Carlo Variance Modeling</h3>
+                            <p class="text-on-surface-variant max-w-md text-xl leading-relaxed">
+                                Simulate thousands of production runs using real-world PDK parameters. Model transistor gate length variations, threshold voltage shifts, and interconnect resistance with surgical precision.
+                            </p>
+                        </div>
+                        <div class="mt-16">
+                            <a class="inline-flex items-center gap-3 text-primary font-bold font-label text-lg group-hover:gap-6 transition-all" href="{% url 'auth:login' %}">
+                                EXPLORE PDK INTEGRATIONS <span class="material-symbols-outlined">arrow_forward</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="absolute top-0 right-0 w-2/3 h-full opacity-[0.03] group-hover:opacity-[0.07] transition-opacity pointer-events-none">
+                        <img alt="Tech hardware pattern" class="w-full h-full object-cover"
+                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuDavY9VLzOIb0aBrWEeLTF6jGPy0qCSRMDN2yqenSQR_dp9Gsb24lVrj9NCNMashonv06S88xNKpKJXIHSEoRYdHqRAN3gK6Rm7IvG6RpCzBt9Hl8jQQXmMxeoMwyv1l9T66TMQXNe6tUWvM9HUfOvTmsueezQjlMsKDguYl8WkWSFiear47HVCRAKfV5UVrofY1I8JL9dgJoGHufsNcRw1Q0O--3L9UDvsn82-gT-ckd1157m2HFcmrfvVJQr9Y5vIT0NUs3qMrU2g"/>
+                    </div>
+                </div>
+                <!-- Small Technical Card -->
+                <div class="col-span-12 lg:col-span-4 bg-primary text-on-primary p-12 rounded-3xl flex flex-col justify-between reveal-on-scroll stagger-1 shadow-2xl shadow-primary/20">
+                    <div>
+                        <h3 class="text-3xl font-headline font-bold mb-6 leading-tight">Real-time Defect Mapping</h3>
+                        <p class="text-lg opacity-80 font-body leading-relaxed">Visualize spatial defect distribution across the entire wafer surface with high-resolution heat-map overlays.</p>
+                    </div>
+                    <div class="bg-white/10 p-8 rounded-2xl mt-12 border border-white/20 backdrop-blur-sm">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="font-label text-xs font-bold tracking-widest opacity-70">NODE STATUS</span>
+                            <span class="w-3 h-3 rounded-full bg-primary-fixed shadow-[0_0_12px_#85f8c4] animate-pulse"></span>
+                        </div>
+                        <div class="font-label text-lg font-bold">SKY130_STABLE_V2.1</div>
+                    </div>
+                </div>
+
+                <!-- Visual Break Section 2 -->
+                <div class="col-span-12 my-10 reveal-on-scroll">
+                    <div class="image-reveal-container rounded-3xl shadow-2xl shadow-slate-300/50">
+                        <img alt="Abstract visualization of semiconductor yield data"
+                             class="w-full h-[500px] object-cover image-reveal-img"
+                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFt2bT-8gfdEwJyS6r7_QOWbWtSg93XLYkPqcRUm3KsN2JplIvtzZDov7x_6CpvVlt4ha8Sa-5iGZPfdrEUefvZ-uj8PvMHc-NSQm-nXvQwDG--wM8uwOdrws12Tnxqv17BrShTpnJY2Rz7PbyYewvbV0WbO8tK0o_YZy-OAUDAH5Qi0z1_bxcRSNEz9dt1xfic5Sv8o_SIcDqmjqGoGpKKuTp9ks2L-AFmegvPK6-sL_XEqEf6d7-1jwbDJW0oT9F-oMA6itVfeIj"/>
+                        <div class="absolute inset-0 bg-black/20"></div>
+                        <div class="absolute inset-0 flex items-center justify-center p-12 text-center">
+                            <div class="max-w-2xl text-white">
+                                <h3 class="text-5xl font-headline font-bold mb-6">Advanced Data Analytics</h3>
+                                <p class="text-xl opacity-90 leading-relaxed">Leveraging the latest in 3D data visualization to bring clarity to complex manufacturing metrics.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Research Card -->
+                <div class="col-span-12 md:col-span-6 bg-white p-12 rounded-3xl flex flex-col sm:flex-row gap-10 items-start reveal-on-scroll shadow-lg shadow-slate-100">
+                    <div class="w-20 h-20 shrink-0 bg-slate-50 rounded-2xl flex items-center justify-center text-primary border border-slate-100">
+                        <span class="material-symbols-outlined text-4xl">science</span>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4 text-slate-900">Academic Partnerships</h3>
+                        <p class="text-on-surface-variant mb-8 text-lg leading-relaxed">Read our latest collaborative paper on AI-driven yield optimization published in Nature Electronics.</p>
+                        <a class="text-primary font-label text-md font-bold group flex items-center gap-2" href="#">
+                            READ PAPER <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Cloud Infrastructure Card -->
+                <div class="col-span-12 md:col-span-6 bg-white p-12 rounded-3xl flex flex-col sm:flex-row gap-10 items-start reveal-on-scroll stagger-1 shadow-lg shadow-slate-100">
+                    <div class="w-20 h-20 shrink-0 bg-slate-50 rounded-2xl flex items-center justify-center text-primary border border-slate-100">
+                        <span class="material-symbols-outlined text-4xl">cloud_sync</span>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4 text-slate-900">Massively Parallel Cloud</h3>
+                        <p class="text-on-surface-variant mb-8 text-lg leading-relaxed">Scale your simulations from 10 to 10,000 wafers per minute using our globally distributed processing engine.</p>
+                        <a class="text-primary font-label text-md font-bold group flex items-center gap-2" href="#">
+                            INFRASTRUCTURE OVERVIEW <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-48 bg-on-surface text-surface relative overflow-hidden" id="cta-section">
+        <div class="absolute inset-0 blueprint-grid opacity-5 pointer-events-none"></div>
+        <div class="max-w-screen-2xl mx-auto px-8 text-center relative z-10">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-6xl md:text-8xl font-headline font-extrabold tracking-tight mb-12 reveal-on-scroll">Ready to simulate?</h2>
+                <p class="text-xl md:text-2xl opacity-60 mb-16 font-body leading-relaxed reveal-on-scroll stagger-1 max-w-2xl mx-auto">
+                    Start optimizing your manufacturing process today. Join the ranks of precision engineers using PatternIQ to secure their silicon roadmap.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-8 reveal-on-scroll stagger-2">
+                    <a href="{% url 'auth:login' %}" class="bg-primary text-on-primary px-12 py-6 rounded-2xl font-bold text-xl hover:scale-[1.02] transition-all shadow-2xl shadow-primary/40">
+                        Launch Simulator
+                    </a>
+                    <button class="border border-surface/20 px-12 py-6 rounded-2xl font-bold text-xl hover:bg-surface/10 transition-all backdrop-blur-sm">
+                        Technical Whitepaper
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="border-t border-slate-200 bg-white">
+    <div class="w-full px-8 py-16 flex flex-col md:flex-row justify-between items-center gap-10 max-w-screen-2xl mx-auto">
+        <div class="flex flex-col items-center md:items-start gap-4">
+            <div class="text-2xl font-black tracking-tighter text-slate-900">PatternIQ</div>
+            <div class="text-sm font-body text-slate-500 text-center md:text-left">© 2024 PatternIQ Semiconductors. All rights reserved.<br/>Precision Engineering Systems for the next generation of silicon.</div>
+        </div>
+        <div class="flex flex-wrap justify-center gap-10">
+            <a class="text-slate-500 hover:text-primary transition-colors text-xs uppercase tracking-widest font-bold font-label" href="#">Privacy Policy</a>
+            <a class="text-slate-500 hover:text-primary transition-colors text-xs uppercase tracking-widest font-bold font-label" href="#">Terms of Service</a>
+            <a class="text-slate-500 hover:text-primary transition-colors text-xs uppercase tracking-widest font-bold font-label" href="#">Security</a>
+            <a class="text-slate-500 hover:text-primary transition-colors text-xs uppercase tracking-widest font-bold font-label" href="#">Compliance</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Staggered word reveal for the mission statement
+        const missionBox = document.getElementById('mission-statement');
+        const text = missionBox.innerText.trim();
+        missionBox.innerHTML = '';
+
+        const words = text.split(' ');
+        words.forEach((word, index) => {
+            const span = document.createElement('span');
+            span.className = 'story-line';
+            span.innerHTML = `<span class="story-word" style="transition-delay: ${index * 30}ms">${word}&nbsp;</span>`;
+            missionBox.appendChild(span);
+        });
+
+        // Intersection Observer for scroll animations (Harvard CfA Style)
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -80px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    if (entry.target.id === 'mission-statement') {
+                        entry.target.querySelectorAll('.story-word').forEach(word => word.classList.add('active'));
+                    }
+                    if (entry.target.classList.contains('image-reveal-container')) {
+                        entry.target.classList.add('active');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-on-scroll, #mission-statement, .image-reveal-container').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Enhanced Hero Parallax Effect
+        const heroImg = document.getElementById('hero-parallax-img');
+        window.addEventListener('scroll', () => {
+            const scrollPos = window.pageYOffset;
+            if (scrollPos < window.innerHeight * 1.5) {
+                const yPos = scrollPos * 0.3;
+                const scale = 1.2 - (scrollPos * 0.0001);
+                heroImg.style.transform = `translateY(${yPos}px) scale(${scale})`;
+            }
+
+            // Header state change on scroll
+            const header = document.querySelector('header');
+            if (scrollPos > 100) {
+                header.classList.add('py-3');
+                header.classList.remove('py-5');
+                header.classList.add('shadow-sm');
+            } else {
+                header.classList.remove('py-3');
+                header.classList.add('py-5');
+                header.classList.remove('shadow-sm');
+            }
+        });
+
+        // Trigger initial reveal for items already in viewport
+        setTimeout(() => {
+            document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.9) {
+                    el.classList.add('active');
+                }
+            });
+        }, 150);
+    });
+</script>
+</body>
+</html>

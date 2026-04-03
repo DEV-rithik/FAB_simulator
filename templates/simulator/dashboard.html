@@ -169,5 +169,62 @@
     </div>
   </div>
   {% endif %}
+
+  <!-- Yield Performance Cycle & Automation Ready (stitch design) -->
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <div class="lg:col-span-3 bg-surface-container-lowest p-8 rounded-xl shadow-[0_4px_20px_rgba(30,41,59,0.04)]">
+      <div class="flex items-center justify-between mb-8">
+        <h3 class="font-headline font-bold text-xl">Yield Performance Cycle</h3>
+        <div class="flex gap-2">
+          <span class="w-3 h-3 rounded-full bg-primary/20"></span>
+          <span class="w-3 h-3 rounded-full bg-primary"></span>
+        </div>
+      </div>
+      <div class="h-48 flex items-end gap-2 px-4" id="yield-chart">
+        {% if recent_runs %}
+          {% for run in recent_runs %}
+            {% if run.mean_yield %}
+            <div class="flex-1 {% if forloop.last %}bg-primary{% else %}bg-surface-container-high hover:bg-primary-container{% endif %} rounded-t-lg transition-all"
+                 style="height: {{ run.mean_yield|floatformat:0 }}%"
+                 title="Run #{{ run.pk }}: {{ run.mean_yield|floatformat:1 }}%"></div>
+            {% else %}
+            <div class="flex-1 bg-surface-container-high rounded-t-lg" style="height: 5%"></div>
+            {% endif %}
+          {% endfor %}
+          {% comment %}Pad to at least 8 bars{% endcomment %}
+          {% if recent_runs|length < 8 %}
+            {% for i in "12345678"|make_list %}
+              {% if forloop.counter > recent_runs|length %}
+              <div class="flex-1 bg-surface-container-high rounded-t-lg" style="height: 20%"></div>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% else %}
+          <div class="flex-1 bg-surface-container-high rounded-t-lg" style="height: 40%"></div>
+          <div class="flex-1 bg-surface-container-high rounded-t-lg" style="height: 55%"></div>
+          <div class="flex-1 bg-primary rounded-t-lg" style="height: 75%"></div>
+          <div class="flex-1 bg-surface-container-high rounded-t-lg" style="height: 45%"></div>
+          <div class="flex-1 bg-surface-container-high rounded-t-lg" style="height: 60%"></div>
+          <div class="flex-1 bg-surface-container-high rounded-t-lg" style="height: 90%"></div>
+          <div class="flex-1 bg-surface-container-high rounded-t-lg" style="height: 70%"></div>
+          <div class="flex-1 bg-surface-container-high rounded-t-lg" style="height: 65%"></div>
+        {% endif %}
+      </div>
+      <div class="flex justify-between mt-4 font-label text-[10px] text-outline tracking-tighter uppercase px-4">
+        <span>Run 1</span><span>Run 2</span><span>Run 3</span><span>Run 4</span><span>Run 5</span><span>Run 6</span><span>Run 7</span><span>Run 8</span>
+      </div>
+    </div>
+    <div class="bg-primary p-8 rounded-xl flex flex-col justify-between text-on-primary">
+      <div>
+        <span class="material-symbols-outlined text-4xl mb-4" style="font-variation-settings: 'FILL' 1;">precision_manufacturing</span>
+        <h4 class="font-headline font-bold text-xl leading-tight">Automation Ready</h4>
+      </div>
+      <p class="text-on-primary/80 text-xs font-body leading-relaxed mt-4">Connect your factory API to enable autonomous yield corrections based on PatternIQ predictions.</p>
+      <a href="{% url 'simulator:simulate' %}" class="mt-8 flex items-center gap-2 font-label text-[10px] font-bold uppercase tracking-widest border-b border-on-primary/30 w-fit pb-1 hover:border-on-primary">
+        Run Simulation
+        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+      </a>
+    </div>
+  </div>
 </div>
 {% endblock %}
