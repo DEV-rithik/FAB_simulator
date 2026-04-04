@@ -4,8 +4,11 @@ Django settings for fab_saas project.
 
 import os
 from pathlib import Path
-
+from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# ── Load .env file ───────────────────────────────────────────────────────────
+load_dotenv(BASE_DIR / '.env')
 
 # Read from environment; fall back to dev defaults
 SECRET_KEY = os.environ.get(
@@ -58,21 +61,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'fab_saas.wsgi.application'
 
-# Database — uses Supabase Postgres URL when DATABASE_URL is set,
+# ── Database ─────────────────────────────────────────────────────────────────
+# Uses Supabase Postgres when DB_HOST is set in .env,
 # otherwise falls back to SQLite for local development.
-DATABASE_URL = os.environ.get('DATABASE_URL', '')
-if DATABASE_URL:
-    import urllib.parse as _up
-    _parsed = _up.urlparse(DATABASE_URL)
+_db_host = os.environ.get('DB_HOST', '')
+if _db_host:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': _parsed.path.lstrip('/'),
-            'USER': _parsed.username,
-            'PASSWORD': _parsed.password,
-            'HOST': _parsed.hostname,
-            'PORT': _parsed.port or 5432,
-            'OPTIONS': {'sslmode': 'require'},
+            'HOST': _db_host,
+            'PORT': os.environ.get('DB_PORT', '5432'),
+            'NAME': os.environ.get('DB_NAME', 'postgres'),
+            'USER': os.environ.get('DB_USER', 'postgres'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+            'CONN_MAX_AGE': 600,
+            'CONN_HEALTH_CHECKS': True,
+            'OPTIONS': {
+                'sslmode': 'require',
+            },
         }
     }
 else:

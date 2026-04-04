@@ -1,0 +1,28 @@
+databases: []
+
+services:
+  - type: web
+    name: patterniq-fab-simulator
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: gunicorn fab_saas.wsgi --bind 0.0.0.0:$PORT --workers 2
+    plan: free
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: DB_HOST
+        value: db.xqlbclhcnhyoprukiqvm.supabase.co
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_NAME
+        value: postgres
+      - key: DB_USER
+        value: postgres
+      - key: DB_PASSWORD
+        sync: false
+      - key: PYTHON_VERSION
+        value: "3.12.0"
