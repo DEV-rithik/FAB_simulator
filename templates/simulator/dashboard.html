@@ -228,3 +228,13 @@
   </div>
 </div>
 {% endblock %}
+
+<script>
+  // Populate sidebar quick stats from dashboard context
+  (function () {
+    var totalEl = document.getElementById('sidebar-total-runs');
+    var bestEl  = document.getElementById('sidebar-best-yield');
+    if (totalEl) totalEl.textContent = '{{ total_runs|default:"0" }}';
+    if (bestEl)  bestEl.textContent  = '{% if best_yield %}{{ best_yield|floatformat:1 }}%{% else %}—{% endif %}';
+  })();
+</script>
