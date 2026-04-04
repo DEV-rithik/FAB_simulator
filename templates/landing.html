@@ -101,41 +101,69 @@
   }
   .image-reveal-container.active .image-reveal-img { transform: scale(1); filter: brightness(1) contrast(1); }
   .image-reveal-container:hover .image-reveal-img { transform: scale(1.05); }
+  /* Floating transparent nav — no background at top */
   .glass-header {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom: 1px solid transparent;
+    transition: background 0.5s ease, backdrop-filter 0.5s ease, border-color 0.5s ease;
   }
+  /* After scrolling 60px, show a soft frosted panel */
+  .glass-header.scrolled {
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom-color: rgba(0, 0, 0, 0.06);
+  }
+  /* Nav links: white on hero, dark slate when scrolled */
+  .nav-floating-link {
+    color: rgba(15,15,15,0.85);
+    font-weight: 500;
+    transition: color 0.3s ease, opacity 0.3s ease;
+  }
+  .nav-floating-link:hover { color: #000000; opacity: 1; }
+  .glass-header.scrolled .nav-floating-link { color: #374151; }
+  .glass-header.scrolled .nav-floating-link:hover { color: #006948; }
+  /* Logo: black on hero, dark when scrolled */
+  .nav-logo { color: #0a0a0a; transition: color 0.3s ease; }
+  .glass-header.scrolled .nav-logo { color: #111827; }
+  /* Username text */
+  .nav-username { color: rgba(15,15,15,0.72); transition: color 0.3s ease; }
+  .glass-header.scrolled .nav-username { color: #4b5563; }
+  /* Active link underline */
+  .nav-floating-link.active { color: #000000; border-bottom: 2px solid rgba(0,0,0,0.6); padding-bottom: 2px; }
+  .glass-header.scrolled .nav-floating-link.active { color: #006948; border-bottom-color: #006948; }
 </style>
 </head>
 <body class="bg-surface font-body text-on-surface overflow-x-hidden">
 
 <!-- Sticky Nav -->
-<header class="fixed top-0 left-0 right-0 z-[60] glass-header transition-all duration-500" id="main-header">
+<header class="fixed top-0 left-0 right-0 z-[60] glass-header" id="main-header">
   <nav class="flex justify-between items-center w-full px-8 py-5 max-w-screen-2xl mx-auto">
     <div class="flex items-center gap-12">
-      <a class="text-2xl font-black tracking-tighter text-slate-900 font-headline" href="/">PatternIQ</a>
+      <a class="text-2xl font-black tracking-tighter font-headline nav-logo" href="/">PatternIQ</a>
       <div class="hidden md:flex items-center gap-8">
-        <a class="text-emerald-700 font-bold border-b-2 border-emerald-700 pb-1" href="#">Platform</a>
-        <a class="text-slate-600 font-medium hover:text-slate-900 transition-colors" href="#">Simulations</a>
-        <a class="text-slate-600 font-medium hover:text-slate-900 transition-colors" href="#">Research</a>
-        <a class="text-slate-600 font-medium hover:text-slate-900 transition-colors" href="#">Documentation</a>
+        <a class="nav-floating-link" href="#">Platform</a>
+        <a class="nav-floating-link" href="#">Simulations</a>
+        <a class="nav-floating-link" href="#">Research</a>
+        <a class="nav-floating-link" href="#">Documentation</a>
       </div>
     </div>
     <div class="flex items-center gap-4">
       {% if user.is_authenticated %}
-        <span class="hidden lg:inline text-sm font-label font-medium text-secondary">{{ user.username }}</span>
+        <span class="hidden lg:inline text-sm font-label font-medium nav-username">{{ user.username }}</span>
         <a href="{% url 'simulator:dashboard' %}" id="nav-cta"
            class="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold hover:shadow-lg hover:shadow-primary/20 transition-all">
           Dashboard
         </a>
       {% else %}
         <a href="{% url 'auth:login' %}" id="nav-signin"
-           class="text-sm font-label font-bold text-slate-600 hover:text-primary transition-colors px-4 py-2">
+           class="nav-floating-link text-sm font-label font-bold px-4 py-2">
           Sign In
         </a>
         <a href="{% url 'auth:login' %}" id="nav-cta"
-           class="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold hover:shadow-lg hover:shadow-primary/20 transition-all">
+           class="bg-black/85 text-white px-6 py-2.5 rounded-lg text-sm font-bold hover:bg-black transition-all shadow-sm">
           Get Started
         </a>
       {% endif %}
@@ -413,12 +441,11 @@ document.addEventListener('DOMContentLoaded', () => {
       heroImg.style.transform = `translateY(${yPos}px) scale(${scale})`;
     }
     if (header) {
-      if (scrollPos > 100) {
-        header.classList.add('py-3', 'shadow-sm');
-        header.classList.remove('py-5');
+      // Add 'scrolled' class after 60px to reveal frosted background
+      if (scrollPos > 60) {
+        header.classList.add('scrolled');
       } else {
-        header.classList.remove('py-3', 'shadow-sm');
-        header.classList.add('py-5');
+        header.classList.remove('scrolled');
       }
     }
   });
